@@ -10,13 +10,7 @@ COPY . .
 
 RUN apt-get install -y maven
 
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env echo "" > /etc/secrets/.env
-
-RUN cat /etc/secrets/.env
-
-ENV MAVEN_OPTS="-Ddotenv.location=/etc/secrets/.env"
-
-RUN mvn clean install
+RUN RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env  mvn clean install
 
 FROM openjdk:17-jdk-slim
 
