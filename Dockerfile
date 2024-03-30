@@ -10,7 +10,7 @@ COPY . .
 
 RUN apt-get install -y maven
 
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env echo
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env echo "" > /etc/secrets/.env
 
 RUN cat /etc/secrets/.env
 
