@@ -12,7 +12,11 @@ RUN apt-get install -y maven
 
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env echo
 
-RUN mvn clean install -Ddotenv.location=/etc/secrets/.env
+RUN cat /etc/secrets/.env
+
+ENV MAVEN_OPTS="-Ddotenv.location=/etc/secrets/.env"
+
+RUN mvn clean install
 
 FROM openjdk:17-jdk-slim
 
@@ -21,4 +25,3 @@ EXPOSE 8080
 COPY --from=build /target/demoday-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
