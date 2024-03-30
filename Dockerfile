@@ -10,7 +10,7 @@ COPY . .
 
 RUN apt-get install -y maven
 
-RUN RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env  mvn clean install
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env  mvn clean install
 
 FROM openjdk:17-jdk-slim
 
