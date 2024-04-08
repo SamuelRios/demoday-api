@@ -19,9 +19,9 @@ A requisição deve incluir um corpo JSON contendo os dados do usuário a ser cr
 | `cpf`    | String   | CPF do usuário | Sim |
 | `name`   | String   | Nome do usuário | Sim |
 | `email`   | String   | Email do usuário | Sim |
-| `universidade`   | String   | Email do usuário | Não |
-| `tipo`   | Integer   | Tipo do usuário. 0 indica Aluno e 1 indica Professor. | Sim |
-| `senha` | String | Senha do usuário. Deve conter pelo menos 6 caracteres.| Sim|
+| `aniversity`   | String   | Email do usuário | Não |
+| `type`   | Integer   | Tipo do usuário. 0 indica Aluno e 1 indica Professor. | Sim |
+| `password` | String | Senha do usuário. Deve conter pelo menos 6 caracteres.| Sim|
 
 Exemplo de corpo da requisição:
 
