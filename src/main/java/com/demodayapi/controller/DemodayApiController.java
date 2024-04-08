@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +32,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin
 public class DemodayApiController {
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    FirebaseService firebaseService;
+
     @GetMapping("/")
     public String  hello(){
         return "demoday-api is online";
@@ -39,11 +46,11 @@ public class DemodayApiController {
     @PostMapping("/createuser")
     public ResponseEntity<Map<String,String>> postMethodName(@Valid @RequestBody User user) throws IOException, MethodArgumentNotValidException {
         try {
-            if(UserService.existsEmail(user.getCpf())) throw new UserEmailAlreadyExistsException();
-            if(UserService.existsCPF(user.getCpf())) throw new UserCPFAlreadyExistsException();
-            String userId = FirebaseService.createUser(user);
+            if(userService.existsEmail(user.getCpf())) throw new UserEmailAlreadyExistsException();
+            if(userService.existsCPF(user.getCpf())) throw new UserCPFAlreadyExistsException();
+            String userId = this.firebaseService.createUser(user);
             user.setId(userId);
-            User savedUser = UserService.saveUser(user);
+            User savedUser = userService.saveUser(user);
             if(savedUser != null){
                 Map<String, String> response = new HashMap<>();
                 response.put("userId", userId);
@@ -62,7 +69,7 @@ public class DemodayApiController {
 
     @GetMapping("/getusers")
     public ResponseEntity<List<User>> getusers() {
-        return new ResponseEntity<>(UserService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
     
     

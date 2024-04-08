@@ -1,45 +1,51 @@
 package com.demodayapi.firebase;
-
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+@Service
 public class FirebaseClient {
 
-    private FirebaseClient(){
-        
+    private FirebaseAuth firebaseInstance;
+
+    @Autowired
+    ResourceLoader resourceLoader;
+
+	private String tokenFile = "tokens/firebasetoken.json";
+
+    private FirebaseClient() {
     }
 
-    private static FirebaseAuth firebaseInstance;
-
-	private static String tokenFile = "src/main/resources/tokens/demoday-db-419519-firebase-adminsdk-1t357-742d3bddcb.json";
-
-    public static FirebaseAuth getInstance() throws IOException{
-        if(FirebaseClient.firebaseInstance == null){
-            FirebaseClient.newInstance();
+    public FirebaseAuth getInstance() throws IOException{
+        if(this.firebaseInstance == null){
+            this.newInstance();
         }
-        return FirebaseClient.firebaseInstance;
+        return this.firebaseInstance;
     }
 
-    private static void newInstance() throws IOException {
+    private void newInstance() throws IOException {
         if (!FirebaseApp.getApps().isEmpty()) {
-            FirebaseClient.firebaseInstance = FirebaseAuth.getInstance();
+            this.firebaseInstance = FirebaseAuth.getInstance();
         } else {
             System.out.println("aqui apenas uma vezzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-            FileInputStream token = new FileInputStream(tokenFile);
-    
+            Resource res = resourceLoader.getResource("classpath:" + this.tokenFile);
+            InputStream token = res.getInputStream();
             FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(token))
                 .build();
     
             FirebaseApp.initializeApp(options);
-            FirebaseClient.firebaseInstance = FirebaseAuth.getInstance();
+            this.firebaseInstance = FirebaseAuth.getInstance();
         }
         
     }
-
 }
