@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -36,38 +35,33 @@ public class newDemoday {
     private Date phase_one_end;
 
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_two_init;
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_two_end;
 
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_three_init;
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_three_end;
 
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_four_init;
 
-    @Column(nullable=false, length = 10)
+    @Column(length = 10)
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_four_end;
     
-    @Column(nullable=true, length = 45)
-    private String university;
     
-    @Column(nullable=true)
-    @NotNull(message = "Tipo é obrigatório.")
-    private int type;
 
 
 
