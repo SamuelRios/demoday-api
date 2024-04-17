@@ -35,9 +35,9 @@ public class User {
     @Column(nullable=true, length = 45)
     private String university;
     
-    @Column(nullable=true)
+    @Column(nullable=false)
     @NotNull(message = "Tipo é obrigatório.")
-    private int type;
+    private String type;
 
     @Transient()
     private String password;
