@@ -1,6 +1,6 @@
 package com.demodayapi.enums;
 
-public enum SubmitProjectEnum {
+public enum ProjectTypeEnum {
     IC("IC"),
     TCC("TCC"),
     DISC("DISC"),
@@ -13,12 +13,12 @@ public enum SubmitProjectEnum {
         return typeCode;
     }
 
-    SubmitProjectEnum(String typeCode) {
+    ProjectTypeEnum(String typeCode) {
         this.typeCode = typeCode;
     }
 
-    public static SubmitProjectEnum valueofProjectEnum(String typeCode){
-        for(SubmitProjectEnum value: SubmitProjectEnum.values()){
+    public static ProjectTypeEnum valueofProjectEnum(String typeCode){
+        for(ProjectTypeEnum value: ProjectTypeEnum.values()){
             if (typeCode.equals(value.getTypeCode())) {
                 return value;
         }   
