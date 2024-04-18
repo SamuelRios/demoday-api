@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.models.User;
 import com.demodayapi.repositories.UserRepository;
 
@@ -36,6 +37,10 @@ public class UserService {
 
     public List<User> findAll(){
         return this.userRepository.findAll();
+    }
+
+    public List<User> findAllPending(){
+        return this.userRepository.findByStatus(UserStatusEnum.PENDING);
     }
 
 }
