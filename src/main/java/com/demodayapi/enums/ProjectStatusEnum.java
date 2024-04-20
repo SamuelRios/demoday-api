@@ -1,6 +1,6 @@
 package com.demodayapi.enums;
 
-public enum StatusEnum {
+public enum ProjectStatusEnum {
     SUBMETIDO("SUBMETIDO"),
     EM_ANALISE("EM_ANALISE"),
     RECUSADO("RECUSADO"),
@@ -14,12 +14,12 @@ public enum StatusEnum {
     }
 
 
-    StatusEnum(String typeCode) {
+    ProjectStatusEnum(String typeCode) {
         this.typeCode = typeCode;
     }
 
-    public static StatusEnum valueofStatusEnum(String typeCode){
-        for(StatusEnum value: StatusEnum.values()){
+    public static ProjectStatusEnum valueofStatusEnum(String typeCode){
+        for(ProjectStatusEnum value: ProjectStatusEnum.values()){
             if (typeCode.equals(value.getTypeCode())) {
                 return value;
         }   

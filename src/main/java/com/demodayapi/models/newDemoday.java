@@ -15,49 +15,49 @@ public class newDemoday {
     @Id()
     private int id;
 
-    @Column(nullable=false, length = 200)
+    @Column(nullable=false, length = 255)
     @NotBlank(message = "Nome do damoday é obrigatório.")
     @Size(min = 5, message = "O nome ddo damoday deve ter no mínimo 5 caracteres.")
     private String name;
 
-    @Column(nullable=false, length = 4)
+    @Column(nullable=false,columnDefinition = "DATE")
     @NotBlank(message = "Forneça um ano com 4 caracteres e maior que o ano atual")
     private int year;
 
-    @Column(nullable=false, length = 10)
+    @Column(nullable=false, columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     @NotBlank(message = "A data da fase 1 é obrigatória.")
     private Date phase_one_init;
 
-    @Column(nullable=false, length = 10)
+    @Column(nullable=false, columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     @NotBlank(message = "A data da fase 1 é obrigatória.")
     private Date phase_one_end;
 
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_two_init;
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_two_end;
 
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_three_init;
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_three_end;
 
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_four_init;
 
-    @Column(length = 10)
+    @Column(columnDefinition = "DATE")
     @Size(min =8, max = 10, message = "Insira uma data válida")
     private Date phase_four_end;
     
