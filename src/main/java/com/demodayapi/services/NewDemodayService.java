@@ -11,8 +11,8 @@ public class NewDemodayService {
     @Autowired
     private NewDemodayRepository demodayRepository;
 
-    public newDemoday saveDemoday (newDemoday demoday){
-        return this.demodayRepository.save(demoday);
+    public newDemoday saveDemoday(newDemoday newDemoday){
+         return this.demodayRepository.save(newDemoday);
 
     }
 
@@ -27,6 +27,9 @@ public class NewDemodayService {
         }
         return false;
     }
+
+   
+	
 
 
 }

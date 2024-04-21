@@ -15,7 +15,7 @@ public interface NewDemodayRepository extends CrudRepository<newDemoday, Integer
     List<newDemoday> findAll();
     newDemoday findById(int Id);
     void deleteById(int Id);
-
+    
 
     
    
