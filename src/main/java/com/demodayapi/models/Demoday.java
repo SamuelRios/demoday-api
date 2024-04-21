@@ -1,18 +1,22 @@
 package com.demodayapi.models;
-import java.util.Date;
+import java.time.LocalDate;
+
+
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="demoday")
-public class newDemoday {
+public class Demoday {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,35 +30,39 @@ public class newDemoday {
     @Column(nullable=false,columnDefinition = "INT")
     private int year;
 
-    @NotNull
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseOneInit ;
+	@Future
+	@NotNull
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseOneInit ;
 
-    @NotNull
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseOneEnd ;
+	@Future
+	@NotNull
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseOneEnd ;
 
+	@Future
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseTwoInit ;
 
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseTwoInit ;
+    @Future
+    @Column( columnDefinition = "DATE")
+    private LocalDate phaseTwoEnd ;
 
-   
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseTwoEnd ;
+	@Future
+    @Column( columnDefinition = "DATE")
+    private LocalDate phaseThreeInit ;
 
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseThreeInit ;
+	@Future
+    @Column( columnDefinition = "DATE")
+    private LocalDate phaseThreeEnd ;
 
-   
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseThreeEnd ;
+	@Future
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseFourInit ;
 
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseFourInit ;
-
-   
-    @Column(nullable=false, columnDefinition = "DATE")
-    private Date phaseFourEnd ;
+    @Future
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseFourEnd ;
 
 
 	public int getId() {
@@ -87,82 +95,82 @@ public class newDemoday {
 	}
 
 
-	public Date getPhaseOneInit() {
+	public LocalDate getPhaseOneInit() {
 		return phaseOneInit;
 	}
 
 
-	public void setPhaseOneInit(Date phaseOneInit) {
+	public void setPhaseOneInit(LocalDate phaseOneInit) {
 		this.phaseOneInit = phaseOneInit;
 	}
 
 
-	public Date getPhaseOneEnd() {
+	public LocalDate getPhaseOneEnd() {
 		return phaseOneEnd;
 	}
 
 
-	public void setPhaseOneEnd(Date phaseOneEnd) {
+	public void setPhaseOneEnd(LocalDate phaseOneEnd) {
 		this.phaseOneEnd = phaseOneEnd;
 	}
 
 
-	public Date getPhaseTwoInit() {
+	public LocalDate getPhaseTwoInit() {
 		return phaseTwoInit;
 	}
 
 
-	public void setPhaseTwoInit(Date phaseTwoInit) {
+	public void setPhaseTwoInit(LocalDate phaseTwoInit) {
 		this.phaseTwoInit = phaseTwoInit;
 	}
 
 
-	public Date getPhaseTwoEnd() {
+	public LocalDate getPhaseTwoEnd() {
 		return phaseTwoEnd;
 	}
 
 
-	public void setPhaseTwoEnd(Date phaseTwoEnd) {
+	public void setPhaseTwoEnd(LocalDate phaseTwoEnd) {
 		this.phaseTwoEnd = phaseTwoEnd;
 	}
 
 
-	public Date getPhaseThreeInit() {
+	public LocalDate getPhaseThreeInit() {
 		return phaseThreeInit;
 	}
 
 
-	public void setPhaseThreeInit(Date phaseThreeInit) {
+	public void setPhaseThreeInit(LocalDate phaseThreeInit) {
 		this.phaseThreeInit = phaseThreeInit;
 	}
 
 
-	public Date getPhaseThreeEnd() {
+	public LocalDate getPhaseThreeEnd() {
 		return phaseThreeEnd;
 	}
 
 
-	public void setPhaseThreeEnd(Date phaseThreeEnd) {
+	public void setPhaseThreeEnd(LocalDate phaseThreeEnd) {
 		this.phaseThreeEnd = phaseThreeEnd;
 	}
 
 
-	public Date getPhaseFourInit() {
+	public LocalDate getPhaseFourInit() {
 		return phaseFourInit;
 	}
 
 
-	public void setPhaseFourInit(Date phaseFourInit) {
+	public void setPhaseFourInit(LocalDate phaseFourInit) {
 		this.phaseFourInit = phaseFourInit;
 	}
 
 
-	public Date getPhaseFourEnd() {
+	public LocalDate getPhaseFourEnd() {
 		return phaseFourEnd;
 	}
 
 
-	public void setPhaseFourEnd(Date phaseFourEnd) {
+	public void setPhaseFourEnd(LocalDate phaseFourEnd) {
 		this.phaseFourEnd = phaseFourEnd;
 	}
 

@@ -1,7 +1,7 @@
 package com.demodayapi.models;
 
 import java.time.Year;
-import com.demodayapi.enums.StatusEnum;
+import com.demodayapi.enums.ProjectStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -80,7 +80,7 @@ public class SubmitProject {
     @ManyToOne
     @JoinColumn(name = "demoday_id")
     @NotNull(message = "É necessario ter um demoday cadastrado.")
-    private newDemoday demoday;
+    private Demoday demoday;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -179,11 +179,11 @@ public class SubmitProject {
         this.linkdoc = linkdoc;
     }
 
-    public newDemoday getDemoday() {
+    public Demoday getDemoday() {
         return demoday;
     }
 
-    public void setDemoday(newDemoday demoday) {
+    public void setDemoday(Demoday demoday) {
         this.demoday = demoday;
     }
 
@@ -211,7 +211,7 @@ public class SubmitProject {
         this.image = image;
     }
 
-    public StatusEnum getType() {
-        return StatusEnum.valueOf(this.status);
+    public ProjectStatusEnum getType() {
+        return ProjectStatusEnum.valueOf(this.status);
     }
 }

@@ -2,26 +2,26 @@ package com.demodayapi.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.demodayapi.models.newDemoday;
-import com.demodayapi.repositories.NewDemodayRepository;
+import com.demodayapi.models.Demoday;
+import com.demodayapi.repositories.DemodayRepository;
 
 @Service
-public class NewDemodayService {
+public class DemodayService {
 
     @Autowired
-    private NewDemodayRepository demodayRepository;
+    private DemodayRepository demodayRepository;
 
-    public newDemoday saveDemoday(newDemoday newDemoday){
+    public Demoday saveDemoday(Demoday newDemoday){
          return this.demodayRepository.save(newDemoday);
 
     }
 
-    public List<newDemoday> findAll(){
+    public List<Demoday> findAll(){
         return this.demodayRepository.findAll();
     }
 
     public boolean existsDemoday(int id){
-        newDemoday existingDemoday = this.demodayRepository.findById(id);
+        Demoday existingDemoday = this.demodayRepository.findById(id);
         if(existingDemoday != null){
             return true;
         }

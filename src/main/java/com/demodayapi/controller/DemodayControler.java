@@ -1,6 +1,6 @@
 package com.demodayapi.controller;
-import com.demodayapi.models.newDemoday;
-import com.demodayapi.services.NewDemodayService;
+import com.demodayapi.models.Demoday;
+import com.demodayapi.services.DemodayService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -24,28 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @CrossOrigin
-public class newDemodayControler {
+public class DemodayControler {
     
 
     @Autowired
-    NewDemodayService NewDemodayService;
+    DemodayService NewDemodayService;
 
     @GetMapping("/demodays")
-    public ResponseEntity<List<newDemoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
+    public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
     
-        List<newDemoday> demodays = NewDemodayService.findAll();
+        List<Demoday> demodays = NewDemodayService.findAll();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
 
     @PostMapping("/newDemoday")
-    public ResponseEntity<newDemoday> postDemoday(@RequestBody newDemoday newDemoday) {
-        System.out.println(newDemoday.getName());
-        System.out.println(newDemoday.getPhaseOneInit());
-        System.out.println(newDemoday.getPhaseOneEnd());
-        System.out.println(newDemoday.getYear());
-        System.out.println("xxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-    newDemoday savedDemoday = NewDemodayService.saveDemoday(newDemoday);
-    
+    public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday) {
+    Demoday savedDemoday = NewDemodayService.saveDemoday(newDemoday);
     return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
 }
    
