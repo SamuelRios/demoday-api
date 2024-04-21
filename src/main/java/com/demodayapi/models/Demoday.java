@@ -102,6 +102,7 @@ public class Demoday {
 
 	public void setPhaseOneInit(LocalDate phaseOneInit) {
 		this.phaseOneInit = phaseOneInit;
+		
 	}
 
 
@@ -109,9 +110,9 @@ public class Demoday {
 		return phaseOneEnd;
 	}
 
-
 	public void setPhaseOneEnd(LocalDate phaseOneEnd) {
 		this.phaseOneEnd = phaseOneEnd;
+		
 	}
 
 
@@ -174,9 +175,6 @@ public class Demoday {
 		this.phaseFourEnd = phaseFourEnd;
 	}
 
-
- 
-
-    
-
+	
 }
+ 
