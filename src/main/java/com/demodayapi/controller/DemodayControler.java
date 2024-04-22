@@ -1,7 +1,6 @@
 package com.demodayapi.controller;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-import com.demodayapi.exceptions.ValidateBiggestEndDateException;
-import com.demodayapi.exceptions.ValidateBiggestInitDateException;
+
 import com.demodayapi.models.Demoday;
 import com.demodayapi.services.DemodayService;
 import jakarta.validation.ConstraintViolationException;
@@ -37,29 +36,21 @@ public class DemodayControler {
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
 
-   
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday) {
         try {
             
-            if (DemodayService.ValidateBiggestInitDate(newDemoday)) throw new ValidateBiggestInitDateException();
-            if (DemodayService.ValidateBiggestEndDate(newDemoday)) throw new ValidateBiggestEndDateException();
             if (DemodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
-
+                
                 Demoday savedDemoday = DemodayService.saveDemoday(newDemoday);
+
                 return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
-            
+                
         } catch (ConstraintViolationException e) {
-            // Lidar com a exceção, por exemplo, retornar uma resposta de erro específica
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+           
+            return new ResponseEntity<>( HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         }
     }
-    
-    
-
-// Método para validar o objeto Demoday
-
-
 }
 
 

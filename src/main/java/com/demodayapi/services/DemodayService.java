@@ -29,54 +29,66 @@ public class DemodayService {
     }
 
 
-
  public  boolean validateExistFaseOne(Demoday demoday) {
     // Realizar validações aqui
-    // Por exemplo:
     if (demoday.getPhaseOneInit() == null || demoday.getPhaseOneEnd() == null) {
         return true;
     }
     return false;
 }
 
-
-    public  boolean ValidateBiggestInitDate(Demoday demoday) {
-        // Realizar validações aqui
-        // Por exemplo:
-        
-        if (demoday.getPhaseOneInit().isBefore(demoday.getPhaseTwoInit()) && 
-        demoday.getPhaseTwoInit().isBefore(demoday.getPhaseThreeInit()) && 
-        demoday.getPhaseThreeInit().isBefore(demoday.getPhaseFourInit()) ) {
-            return false; 
-        }
-        return true;
-        }     
-
-
-    public  boolean ValidateBiggestEndDate(Demoday demoday) {
-            // Realizar validações aqui
-            // Por exemplo:
-            
-            if (demoday.getPhaseOneEnd().isBefore(demoday.getPhaseTwoEnd()) && 
-            demoday.getPhaseTwoEnd().isBefore(demoday.getPhaseThreeEnd()) && 
-            demoday.getPhaseThreeEnd().isBefore(demoday.getPhaseFourEnd())) {
-            return false; 
-        } 
-            return true;
-       }     
-
         public  boolean ValidateBiggestInitEndDate(Demoday demoday) {
-            // Realizar validações aqui
-            // Por exemplo:
-            
-            if (demoday.getPhaseOneEnd().isBefore(demoday.getPhaseTwoInit()) && 
-            demoday.getPhaseTwoEnd().isBefore(demoday.getPhaseThreeInit()) && 
-            demoday.getPhaseThreeEnd().isBefore(demoday.getPhaseFourInit())) {
-            return false; 
-        } 
-            return true;
-       } 
     
+       if (demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd()) && demoday.getPhaseTwoEnd() == null && 
+       demoday.getPhaseFourEnd() == null && demoday.getPhaseFourEnd() == null){
+        return false;
+        }else{
+                if (demoday.getPhaseTwoEnd() != null && 
+                demoday.getPhaseThreeEnd() == null &&
+                demoday.getPhaseTwoInit() != null && 
+                demoday.getPhaseThreeInit() == null &&
+                demoday.getPhaseFourInit() == null &&
+                demoday.getPhaseFourEnd() == null &&
+                demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd()) &&
+                demoday.getPhaseOneEnd().isBefore(demoday.getPhaseTwoInit()) &&
+                demoday.getPhaseTwoInit().isBefore(demoday.getPhaseTwoEnd()) ){
+                   
+                    return false;
+                }
+                if(demoday.getPhaseTwoEnd() != null && demoday.getPhaseThreeEnd() != null && 
+                demoday.getPhaseFourEnd() == null &&
+                demoday.getPhaseTwoInit() != null && 
+                demoday.getPhaseThreeInit() != null && 
+                demoday.getPhaseFourInit() == null &&
+                demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd())&&
+                demoday.getPhaseOneEnd().isBefore(demoday.getPhaseTwoInit()) && 
+                demoday.getPhaseTwoInit().isBefore(demoday.getPhaseTwoEnd()) &&
+                demoday.getPhaseTwoEnd().isBefore(demoday.getPhaseThreeInit()) &&
+                demoday.getPhaseThreeInit().isBefore(demoday.getPhaseThreeEnd())){
+                
+                return false;
+             }
+                if(demoday.getPhaseTwoEnd() != null &&
+                demoday.getPhaseThreeEnd() != null &&
+                demoday.getPhaseFourEnd() != null &&
+                demoday.getPhaseTwoInit() != null && 
+                demoday.getPhaseThreeInit() != null  &&
+                demoday.getPhaseFourInit() != null &&
+                demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd())&&
+                demoday.getPhaseOneEnd().isBefore(demoday.getPhaseTwoInit()) && 
+                demoday.getPhaseTwoInit().isBefore(demoday.getPhaseTwoEnd()) &&
+                demoday.getPhaseTwoEnd().isBefore(demoday.getPhaseThreeInit()) &&
+                demoday.getPhaseThreeInit().isBefore(demoday.getPhaseThreeEnd())&&
+                demoday.getPhaseThreeEnd().isBefore(demoday.getPhaseFourInit()) &&
+                demoday.getPhaseFourInit().isBefore(demoday.getPhaseFourEnd())){
+                
+                return false;
+             }
 
+        }
+        System.out.println("Nenhum loop");
+       return true;
+  } 
 
 }
+
