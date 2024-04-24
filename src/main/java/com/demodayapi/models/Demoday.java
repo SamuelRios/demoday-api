@@ -1,6 +1,5 @@
 package com.demodayapi.models;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -72,7 +71,7 @@ public class Demoday {
     @OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
     private List<EvalCriteriaDemoday> evalCriteriaDemoday ;
     
-	
+
 	@PrePersist
 	public void prePersist(){
 	this.accCriteriaDemoday.forEach( i -> i.setDemoday(this));

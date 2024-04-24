@@ -40,25 +40,8 @@ public class DemodayControler {
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday) {
         try {
-            System.out.println("Passou aqiiiii 1");
             if (DemodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
-            System.out.println("Passou aqiiiii 2");
-                Demoday savedDemoday = DemodayService.saveDemoday(newDemoday);
-               
-                System.out.println("Passou aqiiiii 3");
-
-            //     for (AccCriteriaDemoday criteria : newDemoday.getAccCriteriaDemoday()) {
-            //          criteria.setDemoday(savedDemoday);
-            //          accCriteriaDemodayService.saveCriteria(criteria);
-            //     }   
-            //     System.out.println("Passou aqiiiii 3");
-
-            //     for (EvalCriteriaDemoday eval : newDemoday.getEvalCriteriaDemoday()) {
-            //         eval.setDemoday(savedDemoday);
-            //         evalCriteriaDemodayService.saveEval(eval);
-
-            //    }
-               System.out.println("Passou aqiiiii 4");
+                Demoday savedDemoday = DemodayService.saveDemoday(newDemoday); 
             return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
 
         } catch (ConstraintViolationException e) {

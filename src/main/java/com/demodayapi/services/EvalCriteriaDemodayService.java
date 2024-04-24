@@ -17,14 +17,5 @@ public class EvalCriteriaDemodayService {
    }
    
 
-//    public AccCriteriaDemoday saveList(List <AccCriteriaDemoday> criteriaList){
-//     for (AccCriteriaDemoday criteria : criteriaList) {
-//         AccCriteriaDemoday  newCriteria = new AccCriteriaDemoday();
-        
-        
-//     }
-//     return this.AccCriteriaRepository.saveAll(newCriteria);
-// }
-
 
 

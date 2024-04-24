@@ -18,12 +18,9 @@ public class DemodayService {
         }
         return null;
     }
-
-
     public List<Demoday> findAll(){
         return this.demodayRepository.findAll();
     }
-
     public boolean existsDemoday(int id){
         Demoday existingDemoday = this.demodayRepository.findById(id);
         if(existingDemoday != null){
@@ -90,7 +87,6 @@ public class DemodayService {
              }
 
         }
-        System.out.println("Nenhum loop");
        return true;
   } 
 
