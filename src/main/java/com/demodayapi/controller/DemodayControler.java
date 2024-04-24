@@ -1,8 +1,12 @@
 package com.demodayapi.controller;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-
+import com.demodayapi.models.AccCriteriaDemoday;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.EvalCriteriaDemoday;
+import com.demodayapi.services.AccCriteriaDemodayService;
 import com.demodayapi.services.DemodayService;
+import com.demodayapi.services.EvalCriteriaDemodayService;
+
 import jakarta.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.List;
@@ -16,18 +20,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 @RestController
-
-
 @CrossOrigin
 public class DemodayControler {
-    
 
     @Autowired
     DemodayService DemodayService;
+    AccCriteriaDemodayService accCriteriaDemodayService;
+    EvalCriteriaDemodayService evalCriteriaDemodayService;
+
 
     @GetMapping("/demodays")
     public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
@@ -39,18 +40,35 @@ public class DemodayControler {
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday) {
         try {
-            
+            System.out.println("Passou aqiiiii 1");
             if (DemodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
-                
+            System.out.println("Passou aqiiiii 2");
                 Demoday savedDemoday = DemodayService.saveDemoday(newDemoday);
+               
+                System.out.println("Passou aqiiiii 3");
 
-                return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
-                
+            //     for (AccCriteriaDemoday criteria : newDemoday.getAccCriteriaDemoday()) {
+            //          criteria.setDemoday(savedDemoday);
+            //          accCriteriaDemodayService.saveCriteria(criteria);
+            //     }   
+            //     System.out.println("Passou aqiiiii 3");
+
+            //     for (EvalCriteriaDemoday eval : newDemoday.getEvalCriteriaDemoday()) {
+            //         eval.setDemoday(savedDemoday);
+            //         evalCriteriaDemodayService.saveEval(eval);
+
+            //    }
+               System.out.println("Passou aqiiiii 4");
+            return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
+
         } catch (ConstraintViolationException e) {
-           
+            System.out.println(e.getMessage());
             return new ResponseEntity<>( HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         }
     }
+
+
+    
 }
 
 

@@ -1,13 +1,15 @@
 package com.demodayapi.models;
 import java.time.LocalDate;
-
-
-
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -63,6 +65,22 @@ public class Demoday {
     @Future
     @Column(columnDefinition = "DATE")
     private LocalDate phaseFourEnd ;
+
+	@OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
+    private List<AccCriteriaDemoday> accCriteriaDemoday ;
+	
+    @OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
+    private List<EvalCriteriaDemoday> evalCriteriaDemoday ;
+    
+	
+	@PrePersist
+	public void prePersist(){
+	this.accCriteriaDemoday.forEach( i -> i.setDemoday(this));
+	this.evalCriteriaDemoday.forEach( i -> i.setDemoday(this));
+
+	}
+
+	 
 
 
 	public int getId() {
@@ -175,6 +193,37 @@ public class Demoday {
 		this.phaseFourEnd = phaseFourEnd;
 	}
 
+
+	public List <AccCriteriaDemoday> getAccCriteriaDemoday() {
+		return  accCriteriaDemoday;
+	}
+
+
+	public  void setAccCriteriaDemoday (List<AccCriteriaDemoday> accCriteriaDemoday) {
+		this.accCriteriaDemoday = accCriteriaDemoday;
+	}
+
+
+	public void setEvalCriteriaDemoday(List<EvalCriteriaDemoday> evalCriteriaDemoday) {
+		this.evalCriteriaDemoday = evalCriteriaDemoday;
+	}
+
+
+	public List <EvalCriteriaDemoday> getEvalCriteriaDemoday() {
+		return  evalCriteriaDemoday;
+	}
+
+
+
 	
+
+
+	 
+
+
+
+   
+     
+
 }
  

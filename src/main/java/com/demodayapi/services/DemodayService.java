@@ -1,6 +1,5 @@
 package com.demodayapi.services;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demodayapi.models.Demoday;
@@ -12,9 +11,14 @@ public class DemodayService {
     private DemodayRepository demodayRepository;
 
     public Demoday saveDemoday(Demoday newDemoday){
-         return this.demodayRepository.save(newDemoday);
-
+        if (newDemoday != null){
+            Demoday savedDemoday= this.demodayRepository.save(newDemoday);
+         return this.demodayRepository.save(savedDemoday);
+         
+        }
+        return null;
     }
+
 
     public List<Demoday> findAll(){
         return this.demodayRepository.findAll();
