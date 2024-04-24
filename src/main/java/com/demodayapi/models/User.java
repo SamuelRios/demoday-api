@@ -1,8 +1,11 @@
 package com.demodayapi.models;
+import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -35,9 +38,14 @@ public class User {
     @Column(nullable=true, length = 45)
     private String university;
     
-    @Column(nullable=true)
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Tipo é obrigatório.")
-    private int type;
+    private UserTypeEnum type;
+
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private UserStatusEnum status;
 
     @Transient()
     private String password;
@@ -83,12 +91,21 @@ public class User {
     }
     
     public UserTypeEnum getType() {
-        return UserTypeEnum.valueOf(this.type);
+        return this.type;
     }
 
-    public void setType(UserTypeEnum typeEnum) {
-        if(typeEnum != null)
-            this.type = typeEnum.getTypeCode();
+    public void setType(String type) {
+        if(type != null)
+            this.type = UserTypeEnum.valueOf(type);
+    }
+
+    public UserStatusEnum getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        if(status != null)
+            this.status = UserStatusEnum.valueOf(status);
     }
 
     public String getPassword() {
