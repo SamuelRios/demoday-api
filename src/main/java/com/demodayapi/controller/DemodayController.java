@@ -1,8 +1,6 @@
 package com.demodayapi.controller;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-import com.demodayapi.models.AccCriteriaDemoday;
 import com.demodayapi.models.Demoday;
-import com.demodayapi.models.EvalCriteriaDemoday;
 import com.demodayapi.services.AccCriteriaDemodayService;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.EvalCriteriaDemodayService;
@@ -22,13 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class DemodayControler {
+public class DemodayController {
 
     @Autowired
     DemodayService DemodayService;
     AccCriteriaDemodayService accCriteriaDemodayService;
     EvalCriteriaDemodayService evalCriteriaDemodayService;
 
+    @GetMapping("/")
+    public String  hello(){
+        return "demoday-api is online";
+    }
 
     @GetMapping("/demodays")
     public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
