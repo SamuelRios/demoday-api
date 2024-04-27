@@ -19,6 +19,7 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
@@ -62,16 +63,6 @@ public class FirebaseService {
         return true;
     }
 
-    public Cookie createUIdToken(String uId){
-        Cookie uIdCookie = new Cookie("userId", uId);
-        uIdCookie.setMaxAge(36000);
-        uIdCookie.setSecure(true);
-        uIdCookie.setHttpOnly(true);
-        uIdCookie.setDomain(this.domain);
-        uIdCookie.setPath("/");
-        return uIdCookie;
-    }
-
     public Cookie createSessionCookie(String userToken) throws FirebaseAuthException, IOException{
         SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
         String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
@@ -84,12 +75,13 @@ public class FirebaseService {
         return tokenCookie;
     }
 
-    public FirebaseToken checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
+    public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
-        return decodedToken;
+        String uid = decodedToken.getUid();
+        return uid;
     }
 
-    public HttpServletResponse setIdAndSessionCookieNull(HttpServletResponse requestResponse){
+    public HttpServletResponse setSessionCookieNull(HttpServletResponse requestResponse){
         Cookie tokenCookie = new Cookie("session", null);
         tokenCookie.setMaxAge(0);
         tokenCookie.setSecure(true);
@@ -97,15 +89,29 @@ public class FirebaseService {
         tokenCookie.setDomain(this.domain);
         tokenCookie.setPath("/");
         requestResponse.addCookie(tokenCookie);
-
-        Cookie uIdCookie = new Cookie("userId", null);
-        uIdCookie.setMaxAge(0);
-        uIdCookie.setSecure(true);
-        uIdCookie.setHttpOnly(true);
-        uIdCookie.setDomain(this.domain);
-        uIdCookie.setPath("/");
-        requestResponse.addCookie(uIdCookie);
         return requestResponse;
+    }
+    
+    public String getLoggedUserId(HttpServletRequest request){
+        String sessionCookieValue = null;
+		try {
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("session")) {
+						sessionCookieValue = cookie.getValue();
+					}
+				}
+			}
+			if (sessionCookieValue != null) {
+				return this.checkSessionCookie(sessionCookieValue);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+            return null;
+		}
+        
     }
 
 

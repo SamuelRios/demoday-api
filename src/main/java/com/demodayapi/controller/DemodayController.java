@@ -29,6 +29,10 @@ public class DemodayControler {
     AccCriteriaDemodayService accCriteriaDemodayService;
     EvalCriteriaDemodayService evalCriteriaDemodayService;
 
+    @GetMapping("/")
+    public String  hello(){
+        return "demoday-api is online";
+    }
 
     @GetMapping("/demodays")
     public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
