@@ -17,7 +17,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="projects")
-public class SubmitProject {
+public class Project {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
