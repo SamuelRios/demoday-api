@@ -1,8 +1,12 @@
 package com.demodayapi.services;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.User;
 import com.demodayapi.repositories.DemodayRepository;
 @Service
 public class DemodayService {
@@ -89,6 +93,23 @@ public class DemodayService {
         }
        return true;
   } 
+
+   public void setStatusProgress(Demoday statusDemoday){      
+    statusDemoday.setStatus("PROGRESS");
+}
+ 
+
+
+// public boolean IsDemodayInProgress(){      
+//     Demoday lastDemoday = demodayRepository.findDemodayWithNullOrMaxPhaseFourEndDate().get();
+//     if (lastDemoday == null || lastDemoday.getPhaseFourEnd()!= null && lastDemoday.getPhaseFourEnd().isBefore(LocalDate.now())){
+
+//         return true;
+//         // demoday encerrado
+//     }
+//         return false;
+//     //demoday ativo
+// }
 
 }
 

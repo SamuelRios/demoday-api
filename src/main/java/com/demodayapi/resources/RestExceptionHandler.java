@@ -16,7 +16,7 @@ import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-
+import com.demodayapi.exceptions.UserIsNotAdminException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -86,6 +86,20 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidateBiggestBetweenInitEndException.class)
     public ResponseEntity<StandardError> handleValidateBiggestBetweenInitEndExceptions(ValidateBiggestBetweenInitEndException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserIsNotAdminException.class)
+    public ResponseEntity<StandardError> handleUserIsNotAdminExceptions(UserIsNotAdminException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");

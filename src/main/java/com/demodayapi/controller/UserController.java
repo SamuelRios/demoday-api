@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

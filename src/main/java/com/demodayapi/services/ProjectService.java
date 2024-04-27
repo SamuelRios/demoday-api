@@ -13,8 +13,8 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
   
-    public Project saveCriteria(Project newCriteria){
-        return this.projectRepository.save(newCriteria);
+    public Project saveProject(Project newProject){
+        return this.projectRepository.save(newProject);
    }
   
 }

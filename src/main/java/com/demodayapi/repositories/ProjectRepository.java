@@ -13,6 +13,6 @@ import com.demodayapi.models.Demoday;
 public interface ProjectRepository extends CrudRepository<Project, Integer>{
 
     List<Project> findAll();
-    SProject findByUser(User user);
+    Project findByUser(User user);
     Project findByDemoday(Demoday demoday);
 }
