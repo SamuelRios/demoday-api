@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
+import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.models.User;
 import com.demodayapi.services.FirebaseService;
 import com.demodayapi.services.UserService;
 import com.google.firebase.auth.FirebaseAuthException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/user")
@@ -69,4 +73,12 @@ public class UserController {
     public ResponseEntity<List<User>> getusers() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
+
+    @GetMapping("/loggeduser")
+    public User getLoggedUser(HttpServletRequest request) {
+        User user = this.userService.getLoggedUser(request);
+        if(user != null) return user;
+        else throw new UserNotLoggedException();
+    }
+    
 }

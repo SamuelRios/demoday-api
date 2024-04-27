@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
+import com.demodayapi.exceptions.UserNotLoggedException;
+import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -50,7 +52,7 @@ public class RestExceptionHandler {
         err.setErrors(errors);
         err.setMessage("Email já cadastrado.");
         err.setPath(request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -63,6 +65,34 @@ public class RestExceptionHandler {
         err.setStatus(HttpStatus.CONFLICT.value());
         err.setErrors(errors);
         err.setMessage("CPF já cadastrado.");
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserNotLoggedException.class)
+    public ResponseEntity<StandardError> handleUserNotLoggedExceptions(UserNotLoggedException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        errors.put("logged", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidateBiggestBetweenInitEndException.class)
+    public ResponseEntity<StandardError> handleValidateBiggestBetweenInitEndExceptions(ValidateBiggestBetweenInitEndException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }

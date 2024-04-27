@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
+import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.models.User;
 import com.demodayapi.repositories.UserRepository;
 
@@ -60,8 +61,15 @@ public class UserService {
     }
     
     public User getLoggedUser(HttpServletRequest request){
-        String userId = this.firebaseService.getLoggedUserId(request);
-        return this.userRepository.findById(userId).get();
+        try{
+            String userId = this.firebaseService.getLoggedUserId(request);
+            System.out.println(userId);
+            if(userId != null)
+                return this.userRepository.findById(userId).get();
+            else throw new UserNotLoggedException();
+        } catch (Exception e){
+            throw new UserNotLoggedException();
+        }
     }
 
 }
