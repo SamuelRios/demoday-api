@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -45,7 +44,7 @@ public class UserController {
     }
 
      @PostMapping("/create")
-    public ResponseEntity<Map<String,String>> postMethodName(@Valid @RequestBody User user) throws IOException, MethodArgumentNotValidException {
+    public ResponseEntity<Map<String,String>> createUser(@Valid @RequestBody User user) throws IOException, MethodArgumentNotValidException {
         try {
             if(userService.existsEmail(user.getCpf())) throw new UserEmailAlreadyExistsException();
             if(userService.existsCPF(user.getCpf())) throw new UserCPFAlreadyExistsException();
