@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +16,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="projects")
-public class SubmitProject {
+public class Project {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,9 +72,9 @@ public class SubmitProject {
     @NotNull(message = "status é obrigatório.")
     private String status;
 
-    @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
-    private byte[] image;
+    
+    @Column(length = 500)
+    private String image;
        
     @ManyToOne
     @JoinColumn(name = "demoday_id")
@@ -203,11 +202,11 @@ public class SubmitProject {
         this.status = status;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

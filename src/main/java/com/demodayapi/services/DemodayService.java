@@ -3,7 +3,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.User;
 import com.demodayapi.repositories.DemodayRepository;
 @Service
 public class DemodayService {
@@ -91,7 +94,7 @@ public class DemodayService {
         }
        return true;
   } 
-
+  
   public List<Demoday> getInProgressDemodays(){
     return this.demodayRepository.getInProgressDemodays();
   }
@@ -100,6 +103,9 @@ public class DemodayService {
     List<Demoday> demodayList = this.getInProgressDemodays();
     if(demodayList.size() > 0) return false;
     else return true;
+  }
+  public void setStatusProgress(Demoday statusDemoday){      
+    statusDemoday.setStatus("PROGRESS");
   }
 
 }

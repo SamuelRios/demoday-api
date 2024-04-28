@@ -30,8 +30,6 @@ public class DemodayController {
     @Autowired
     UserService userService;
 
-
-
     @GetMapping("/")
     public String  hello(){
         return "demoday-api is online";
@@ -67,9 +65,6 @@ public class DemodayController {
         List<Demoday> demodays = demodayService.getInProgressDemodays();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
-
-
-
     
 }
 

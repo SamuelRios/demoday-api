@@ -2,7 +2,7 @@ package com.demodayapi.exceptions;
 
 public class UserIsNotAdminException extends RuntimeException {
     public UserIsNotAdminException() {
-        super("Usuário não é um admin.");
+        super("Usuário Admin requerido");
     }
 
     public UserIsNotAdminException(String message) {

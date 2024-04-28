@@ -18,7 +18,7 @@ import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-
+import com.demodayapi.exceptions.UserIsNotAdminException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice

@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import com.demodayapi.models.SubmitProject;
+import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
 import com.demodayapi.models.Demoday;
 
 
 @Repository
-public interface SubmitProjectRepository extends CrudRepository<SubmitProject, Integer>{
+public interface ProjectRepository extends CrudRepository<Project, Integer>{
 
-    List<SubmitProject> findAll();
-    SubmitProject findByUser(User user);
-    SubmitProject findByDemoday(Demoday demoday);
+    List<Project> findAll();
+    Project findByUser(User user);
+    Project findByDemoday(Demoday demoday);
 }

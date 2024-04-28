@@ -1,9 +1,16 @@
 package com.demodayapi.models;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.demodayapi.enums.DemodayStatusEnum;
+import com.demodayapi.enums.UserStatusEnum;
+import com.demodayapi.enums.UserTypeEnum;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -64,6 +71,13 @@ public class Demoday {
     @Future
     @Column(columnDefinition = "DATE")
     private LocalDate phaseFourEnd ;
+
+	 
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private DemodayStatusEnum status;
+
+	
 
 	@OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
     private List<AccCriteriaDemoday> accCriteriaDemoday ;
@@ -213,6 +227,15 @@ public class Demoday {
 	}
 
 
+	public DemodayStatusEnum getStatus() {
+		return status;
+	}
+
+  
+
+	public void setStatus(String status) {
+		this.status = DemodayStatusEnum.valueOf(status);
+	}
 
 	
 
