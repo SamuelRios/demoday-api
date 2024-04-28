@@ -29,9 +29,6 @@ public class LoginController {
     @Autowired
     FirebaseService firebaseService;
 
-	@Value("${demoday.domain}")
-    private String domain = "localhost";
-
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestParam(defaultValue = "userToken") String userToken, HttpServletResponse requestResponse) throws IOException, MethodArgumentNotValidException {
         try {
