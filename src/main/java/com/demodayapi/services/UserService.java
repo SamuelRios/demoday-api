@@ -72,4 +72,10 @@ public class UserService {
         }
     }
 
+    public Boolean isLoggedUserAdmin(HttpServletRequest request){
+        User loggedUser = this.getLoggedUser(request);
+        if(loggedUser.getType().equals(UserTypeEnum.ADMIN)) return true;
+        else return false;
+    }
+
 }
