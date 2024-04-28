@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
+import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -97,18 +99,31 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(AreadyExistInProgressDemodayException.class)
+    public ResponseEntity<StandardError> handleAreadyExistInProgressDemodayExceptions(AreadyExistInProgressDemodayException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.CONFLICT.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UserIsNotAdminException.class)
     public ResponseEntity<StandardError> handleUserIsNotAdminExceptions(UserIsNotAdminException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");
         err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
         err.setErrors(errors);
         err.setMessage(exception.getMessage());
         err.setPath(request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
-
 }

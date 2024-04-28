@@ -1,5 +1,5 @@
 package com.demodayapi.services;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,8 @@ public class DemodayService {
 }
 
         public  boolean ValidateBiggestInitEndDate(Demoday demoday) {
-    
+    System.out.println(demoday.getPhaseOneInit().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+    System.out.println(demoday.getPhaseOneEnd().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
        if (demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd()) && demoday.getPhaseTwoEnd() == null && 
        demoday.getPhaseFourEnd() == null && demoday.getPhaseFourEnd() == null){
         return false;
@@ -93,23 +94,19 @@ public class DemodayService {
         }
        return true;
   } 
+  
+  public List<Demoday> getInProgressDemodays(){
+    return this.demodayRepository.getInProgressDemodays();
+  }
 
-   public void setStatusProgress(Demoday statusDemoday){      
+  public Boolean hasDemodayInProgress(){
+    List<Demoday> demodayList = this.getInProgressDemodays();
+    if(demodayList.size() > 0) return false;
+    else return true;
+  }
+  public void setStatusProgress(Demoday statusDemoday){      
     statusDemoday.setStatus("PROGRESS");
-}
- 
-
-
-// public boolean IsDemodayInProgress(){      
-//     Demoday lastDemoday = demodayRepository.findDemodayWithNullOrMaxPhaseFourEndDate().get();
-//     if (lastDemoday == null || lastDemoday.getPhaseFourEnd()!= null && lastDemoday.getPhaseFourEnd().isBefore(LocalDate.now())){
-
-//         return true;
-//         // demoday encerrado
-//     }
-//         return false;
-//     //demoday ativo
-// }
+  }
 
 }
 

@@ -29,7 +29,7 @@ public class FirebaseService {
     private FirebaseClient firebaseClient;
 
     @Value("${demoday.domain}")
-    private String domain = "localhost";
+    private String domain;
     // private String domain = "localhost:3200";
 
     private Long expiresIn = TimeUnit.DAYS.toMillis(1);
@@ -64,6 +64,7 @@ public class FirebaseService {
     }
 
     public Cookie createSessionCookie(String userToken) throws FirebaseAuthException, IOException{
+        System.out.println(this.domain);
         SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
         String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
         Cookie tokenCookie = new Cookie("session", sessionCookie);

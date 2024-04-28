@@ -1,12 +1,9 @@
 package com.demodayapi.controller;
-import com.demodayapi.enums.UserTypeEnum;
+import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Demoday;
-import com.demodayapi.models.User;
-import com.demodayapi.services.AccCriteriaDemodayService;
 import com.demodayapi.services.DemodayService;
-import com.demodayapi.services.EvalCriteriaDemodayService;
 import com.demodayapi.services.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,9 +26,9 @@ public class DemodayController {
 
     @Autowired
     DemodayService demodayService;
+
     @Autowired
     UserService userService;
-    
 
     @GetMapping("/")
     public String  hello(){
@@ -40,33 +37,34 @@ public class DemodayController {
 
     @GetMapping("/demodays")
     public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
-    
         List<Demoday> demodays = demodayService.findAll();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
 
     @PostMapping("/newDemoday")
-    public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday,HttpServletRequest request) {
-
+    public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
         try {
-            User userAdmin = userService.getLoggedUser(request);
-                if ( userAdmin.getType().equals(UserTypeEnum.ADMIN) ){
-            if (demodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
-            demodayService.setStatusProgress(newDemoday);
-            Demoday savedDemoday = demodayService.saveDemoday(newDemoday); 
-            
-            return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
-             }
+            if(this.userService.isLoggedUserAdmin(request)){
+                if(!this.demodayService.hasDemodayInProgress()){
 
-             throw new UserIsNotAdminException(); 
+                    if (demodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
+                    Demoday savedDemoday = demodayService.saveDemoday(newDemoday); 
+                    return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
 
+                } throw new AreadyExistInProgressDemodayException();
+            } throw new UserIsNotAdminException();
         } catch (ConstraintViolationException e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>( HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
+    @GetMapping("/getactivedemoday")
+    public ResponseEntity<List<Demoday>> getActiveDemoday() throws IOException, MethodArgumentNotValidException{
+    
+        List<Demoday> demodays = demodayService.getInProgressDemodays();
+        return new ResponseEntity<>(demodays, HttpStatus.OK);
+    }
     
 }
 
