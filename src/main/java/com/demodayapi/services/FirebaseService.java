@@ -63,6 +63,13 @@ public class FirebaseService {
         return true;
     }
 
+
+    public String createSessionToken(String userToken) throws FirebaseAuthException, IOException{
+        System.out.println(this.domain);
+        SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
+        return this.firebaseClient.getInstance().createSessionCookie(userToken, options);
+    }
+
     public Cookie createSessionCookie(String userToken) throws FirebaseAuthException, IOException{
         System.out.println(this.domain);
         SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
@@ -83,8 +90,9 @@ public class FirebaseService {
         String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
         Cookie tokenCookie = new Cookie("session", sessionCookie);
         tokenCookie.setMaxAge(36000);
-        tokenCookie.setSecure(false);
+        tokenCookie.setSecure(true);
         tokenCookie.setHttpOnly(true);
+        tokenCookie.setDomain("localhost");
         tokenCookie.setPath("/");
         return tokenCookie;
     }
