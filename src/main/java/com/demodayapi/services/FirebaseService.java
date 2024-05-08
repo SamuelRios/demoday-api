@@ -76,6 +76,20 @@ public class FirebaseService {
         return tokenCookie;
     }
 
+    public Cookie createSessionLocalCookie(String userToken) throws FirebaseAuthException, IOException{
+        // EXCLUIR METODO QUANDO ENTRAR EM PRODUCÃO
+        System.out.println(this.domain);
+        SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
+        String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
+        Cookie tokenCookie = new Cookie("session", sessionCookie);
+        tokenCookie.setMaxAge(36000);
+        tokenCookie.setSecure(true);
+        tokenCookie.setHttpOnly(true);
+        tokenCookie.setDomain("localhost");
+        tokenCookie.setPath("/");
+        return tokenCookie;
+    }
+
     public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
         String uid = decodedToken.getUid();
