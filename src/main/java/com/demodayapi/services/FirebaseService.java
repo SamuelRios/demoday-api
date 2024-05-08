@@ -99,7 +99,7 @@ public class FirebaseService {
     public HttpServletResponse setSessionCookieNull(HttpServletResponse requestResponse){
         Cookie tokenCookie = new Cookie("session", null);
         tokenCookie.setMaxAge(0);
-        tokenCookie.setSecure(true);
+        tokenCookie.setSecure(false);
         tokenCookie.setHttpOnly(true);
         tokenCookie.setDomain(this.domain);
         tokenCookie.setPath("/");
