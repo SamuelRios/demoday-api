@@ -83,7 +83,7 @@ public class FirebaseService {
         String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
         Cookie tokenCookie = new Cookie("session", sessionCookie);
         tokenCookie.setMaxAge(36000);
-        tokenCookie.setSecure(true);
+        tokenCookie.setSecure(false);
         tokenCookie.setHttpOnly(true);
         tokenCookie.setDomain("http://localhost:3000");
         tokenCookie.setPath("/");
