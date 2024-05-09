@@ -35,7 +35,6 @@ public class FirebaseService {
 
     @Value("${demoday.domain}")
     private String domain;
-    // private String domain = "localhost:3200";
 
     private Long expiresIn = TimeUnit.DAYS.toMillis(1);
 
@@ -78,26 +77,14 @@ public class FirebaseService {
         return ResponseCookie.from("session", this.createSessionToken(userToken)) // key & value
 			.httpOnly(true)
 			.secure(true)
-			.domain(this.domain)
-			.path("/")
+			// .domain(this.domain)
+			// .path("/")
 			.maxAge(Duration.ofHours(this.cookieTimeInHours))
 			.sameSite("None")
 			.build()
 			;
     }
-
-    public ResponseCookie createSessionLocalCookie(String userToken) throws FirebaseAuthException, IOException{
-        return ResponseCookie.from("session", this.createSessionToken(userToken)) // key & value
-			.httpOnly(true)
-			.secure(true)
-			.domain("localhost")
-			.path("/")
-			.maxAge(Duration.ofHours(this.cookieTimeInHours))
-			.sameSite("None")
-			.build()
-			;
-    }
-
+    
     public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
         String uid = decodedToken.getUid();
@@ -108,8 +95,8 @@ public class FirebaseService {
         ResponseCookie responseCookie = ResponseCookie.from("session", null)
 			.httpOnly(true)
 			.secure(true)
-			.domain("localhost")
-			.path("/")
+			// .domain("localhost")
+			// .path("/")
 			.maxAge(Duration.ofHours(0))
 			.sameSite("None")
 			.build()

@@ -36,8 +36,7 @@ public class LoginController {
         try {
             System.out.println(userToken);
             ResponseCookie cookie = this.firebaseService.createSessionCookie(userToken);
-			ResponseCookie tokenLocalCookie = this.firebaseService.createSessionLocalCookie(userToken);
-			requestResponse.setHeader(HttpHeaders.SET_COOKIE, cookie.toString() + "; " + tokenLocalCookie.toString());
+			requestResponse.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             Map<String, Boolean> responseData = new HashMap<>();
             responseData.put("logged", true);
             Map<String, Boolean> response = new HashMap<>();
