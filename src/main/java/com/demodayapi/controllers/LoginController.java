@@ -1,14 +1,12 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.time.Duration;
 import org.springframework.http.HttpHeaders;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +35,11 @@ public class LoginController {
     public ResponseEntity<?> signin(@RequestParam(defaultValue = "userToken") String userToken, HttpServletResponse requestResponse) throws IOException, MethodArgumentNotValidException {
         try {
             System.out.println(userToken);
-            Cookie tokenCookie = this.firebaseService.createSessionCookie(userToken);
-			Cookie tokenLocalCookie = this.firebaseService.createSessionLocalCookie(userToken);
-            requestResponse.addCookie(tokenCookie);
-			// EXCLUIR LOCAL QUANDO ENTRAR EM PRODUÇÃO
-            requestResponse.addCookie(tokenLocalCookie);
+            ResponseCookie cookie = this.firebaseService.createSessionCookie(userToken);
+			ResponseCookie tokenLocalCookie = this.firebaseService.createSessionLocalCookie(userToken);
+			requestResponse.setHeader(HttpHeaders.SET_COOKIE, cookie.toString() + "; " + tokenLocalCookie.toString());
+            Map<String, Boolean> responseData = new HashMap<>();
+            responseData.put("logged", true);
             Map<String, Boolean> response = new HashMap<>();
             response.put("logged", true);
             return new ResponseEntity<Map<String,Boolean>>(response, HttpStatus.OK);
@@ -51,31 +49,6 @@ public class LoginController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-	@PostMapping("signingdois")
-  public String demo (@RequestParam(defaultValue = "userToken") String userToken, HttpServletResponse response) {
-	try {
-	// Building cookies
-		ResponseCookie cookie = ResponseCookie.from("session", this.firebaseService.createSessionToken(userToken)) // key & value
-			.httpOnly(true)
-			.secure(false)
-			// .domain("localhost")  // host
-			// .path("/")      // path
-			.maxAge(Duration.ofHours(1))
-			.sameSite("None")  // sameSite
-			.build()
-			;
-		
-		// Response to the client
-		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-		
-		return "ok";
-	} catch (FirebaseAuthException | IOException e) {
-		System.out.println("AQUI ===============================================================");
-		System.out.println(e.getMessage());
-		return "deu ruim";
-	}
-}
 
     @CrossOrigin()
 	@GetMapping("/checkauthstatus")

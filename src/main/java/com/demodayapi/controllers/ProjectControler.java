@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.models.Project;
 import com.demodayapi.services.ProjectService;
 import jakarta.validation.ConstraintViolationException;

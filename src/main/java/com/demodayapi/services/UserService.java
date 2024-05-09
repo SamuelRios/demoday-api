@@ -63,6 +63,7 @@ public class UserService {
     public User getLoggedUser(HttpServletRequest request){
         try{
             String userId = this.firebaseService.getLoggedUserId(request);
+            System.out.println("userId: AQQQQQQ");
             System.out.println(userId);
             if(userId != null)
                 return this.userRepository.findById(userId).get();
