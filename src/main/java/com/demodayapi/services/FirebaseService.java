@@ -77,14 +77,14 @@ public class FirebaseService {
         return ResponseCookie.from("session", this.createSessionToken(userToken)) // key & value
 			.httpOnly(true)
 			.secure(true)
-			// .domain(this.domain)
-			// .path("/")
+			.domain(this.domain)
+			.path("/")
 			.maxAge(Duration.ofHours(this.cookieTimeInHours))
 			.sameSite("None")
 			.build()
 			;
     }
-    
+
     public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
         String uid = decodedToken.getUid();
