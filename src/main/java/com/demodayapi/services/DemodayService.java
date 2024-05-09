@@ -1,9 +1,12 @@
 package com.demodayapi.services;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demodayapi.enums.DemodayStatusEnum;
+import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.User;
@@ -16,8 +19,9 @@ public class DemodayService {
 
     public Demoday saveDemoday(Demoday newDemoday){
         if (newDemoday != null){
-            Demoday savedDemoday= this.demodayRepository.save(newDemoday);
-         return this.demodayRepository.save(savedDemoday);
+
+            Demoday savedDemoday= this.demodayRepository.save(newDemoday);  
+            return this.demodayRepository.save(savedDemoday);
          
         }
         return null;
@@ -25,6 +29,7 @@ public class DemodayService {
     public List<Demoday> findAll(){
         return this.demodayRepository.findAll();
     }
+
     public boolean existsDemoday(int id){
         Demoday existingDemoday = this.demodayRepository.findById(id);
         if(existingDemoday != null){
@@ -42,9 +47,9 @@ public class DemodayService {
     return false;
 }
 
-        public  boolean ValidateBiggestInitEndDate(Demoday demoday) {
-    System.out.println(demoday.getPhaseOneInit().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-    System.out.println(demoday.getPhaseOneEnd().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+    public  boolean ValidateBiggestInitEndDate(Demoday demoday) {
+    // System.out.println(demoday.getPhaseOneInit().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+    // System.out.println(demoday.getPhaseOneEnd().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
        if (demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd()) && demoday.getPhaseTwoEnd() == null && 
        demoday.getPhaseFourEnd() == null && demoday.getPhaseFourEnd() == null){
         return false;
@@ -98,15 +103,47 @@ public class DemodayService {
   public List<Demoday> getInProgressDemodays(){
     return this.demodayRepository.getInProgressDemodays();
   }
-
-  public Boolean hasDemodayInProgress(){
+  public Boolean hasNotDemodayInProgress(){
     List<Demoday> demodayList = this.getInProgressDemodays();
-    if(demodayList.size() > 0) return false;
-    else return true;
-  }
-  public void setStatusProgress(Demoday statusDemoday){      
-    statusDemoday.setStatus("PROGRESS");
-  }
+    LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
+        for (Demoday demoday : demodayList) {
+        if( demoday.getPhaseFourEnd() == null){
+                System.out.println("demodayInativo");
+                return false;  
+            }else{
+               if ((demoday.getPhaseFourEnd().isAfter(dataAtual))) {
+                return false;
+               }
+             }
+        }
+        System.out.println("demodayAativo");
+        return true;
+    }
 
+
+    public List<Demoday> getPhase1(){ 
+        return this.demodayRepository.getPhase1();
+    }
+    public DemodayStatusEnum verifyphase1InProgress(){
+      
+       
+        List<Demoday> demodayList = this.getPhase1();
+        System.out.println(demodayList.size());
+        LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
+        for (Demoday demoday : demodayList) { 
+            System.out.println("ENTROU NO LOOP");
+            if( demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&
+                demoday.getPhaseOneEnd().isAfter(dataAtual) ||
+                demoday.getPhaseOneEnd().isEqual(dataAtual)){
+                    return DemodayStatusEnum.PHASE1;
+                } 
+            }
+
+
+        
+        
+        return DemodayStatusEnum.FINISHED;  
 }
+}
+
 

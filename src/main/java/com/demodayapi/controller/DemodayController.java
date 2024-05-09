@@ -1,4 +1,5 @@
 package com.demodayapi.controller;
+import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
@@ -9,8 +10,10 @@ import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,14 +46,23 @@ public class DemodayController {
 
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
+        LocalDate dataAtual=LocalDate.now();
         try {
+
             if(this.userService.isLoggedUserAdmin(request)){
-                if(!this.demodayService.hasDemodayInProgress()){
-
+                if(this.demodayService.hasNotDemodayInProgress()){
                     if (demodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
-                    Demoday savedDemoday = demodayService.saveDemoday(newDemoday); 
-                    return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
+                    if (newDemoday.getPhaseOneInit().isEqual(dataAtual)){
+                         newDemoday.setStatus("PHASE1");
+                    }else{
+                        newDemoday.setStatus("CREATED");
+                    }
+                    Demoday savedDemoday = demodayService.saveDemoday(newDemoday);
+                   
+                   
+                   
 
+                    return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
                 } throw new AreadyExistInProgressDemodayException();
             } throw new UserIsNotAdminException();
         } catch (ConstraintViolationException e) {

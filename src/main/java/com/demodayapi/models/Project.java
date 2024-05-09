@@ -1,14 +1,17 @@
 package com.demodayapi.models;
-
 import java.time.Year;
 import com.demodayapi.enums.ProjectStatusEnum;
+import com.demodayapi.enums.ProjectTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,10 +25,8 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable=false,columnDefinition = "TINYINT")
-    @NotBlank(message = "O periodo do curso é obrigatório")
-    @Size(min = 1, message = "O periodo do curso deve ter no mínimo 1 caracter.")
-    private byte  period;
+    @Column(nullable=false)
+    private Integer  period;
 
     @Column(nullable=false, length = 255) 
     @NotBlank(message = "título é obrigatório.")
@@ -47,8 +48,6 @@ public class Project {
     private String professor;
 
     @Column(nullable=false, length = 4, columnDefinition = "YEAR")
-    @Size(min = 4, max = 4, message = "O ano deve conter 4 caracteres")
-    @NotBlank(message = "O ano é obrigatório.")
     private Year year;
 
     @Column(nullable=false, length = 500)
@@ -69,24 +68,26 @@ public class Project {
     private String linkdoc;
     
     @Column(nullable=false)
-    @NotNull(message = "status é obrigatório.")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatusEnum status;
 
-    
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private ProjectTypeEnum type;
+
+
     @Column(length = 500)
     private String image;
        
     @ManyToOne
     @JoinColumn(name = "demoday_id")
-    @NotNull(message = "É necessario ter um demoday cadastrado.")
     private Demoday demoday;
+
     
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull(message = "É necessario ter um usuario cadastrado.")
     private User user;
-
-   
 
 
     // Getters and Setters
@@ -98,11 +99,11 @@ public class Project {
         this.id = id;
     }
 
-    public byte getPeriod() {
+    public int getPeriod() {
         return period;
     }
 
-    public void setPeriod(byte period) {
+    public void setPeriod(int period) {
         this.period = period;
     }
 
@@ -194,12 +195,13 @@ public class Project {
         this.user = user;
     }
 
-    public String getStatus() {
-        return status;
+
+    public ProjectStatusEnum getStatus() {
+        return this.status;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = ProjectStatusEnum.valueOf(status);
     }
 
     public String getImage() {
@@ -210,7 +212,12 @@ public class Project {
         this.image = image;
     }
 
-    public ProjectStatusEnum getType() {
-        return ProjectStatusEnum.valueOf(this.status);
+
+    public ProjectTypeEnum getType() {
+        return type;
+    }
+
+    public void setProjectType(String type) {
+        this.type = ProjectTypeEnum.valueOf(type);
     }
 }

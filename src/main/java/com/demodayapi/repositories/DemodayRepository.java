@@ -16,5 +16,9 @@ public interface DemodayRepository extends CrudRepository<Demoday, Integer>{
 
     @Query("SELECT u FROM Demoday u WHERE u.phaseFourEnd IS NULL OR u.phaseFourEnd = (SELECT MAX(u2.phaseFourEnd) FROM Demoday u2 WHERE u2.phaseFourEnd IS NOT NULL)")
     List<Demoday> getInProgressDemodays();
+
+    @Query("SELECT u FROM Demoday u ORDER BY u.phaseOneInit DESC LIMIT 1")
+    List<Demoday> getPhase1();
+ 
    
 }

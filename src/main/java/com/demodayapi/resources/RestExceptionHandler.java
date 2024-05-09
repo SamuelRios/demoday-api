@@ -18,7 +18,8 @@ import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
-import com.demodayapi.exceptions.UserIsNotAdminException;
+import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -126,4 +127,19 @@ public class RestExceptionHandler {
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ThereIsNotPeriodOfSubmissionException.class)
+    public ResponseEntity<StandardError> ThereIsNotPeriodOfSubmissionExceptions(ThereIsNotPeriodOfSubmissionException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+    
 }
