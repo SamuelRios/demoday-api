@@ -24,9 +24,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@CrossOrigin
 @RestController
-@RequestMapping("/")
+@CrossOrigin(origins = "https://demoday-omega.vercel.app")
 public class LoginController {
     @Autowired
     FirebaseService firebaseService;
@@ -49,7 +48,6 @@ public class LoginController {
         }
     }
 
-    @CrossOrigin()
 	@GetMapping("/checkauthstatus")
 	public ResponseEntity<?>  checkAuthStatus(HttpServletRequest request, HttpServletResponse requestResponse) {
 		String sessionCookieValue = null;
