@@ -1,7 +1,5 @@
 
 package com.demodayapi.models;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -15,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 
-@Table(name="eval_criteria")
+@Table(name = "eval_criteria")
 
 public class EvalCriteriaDemoday {
 
@@ -24,18 +22,16 @@ public class EvalCriteriaDemoday {
     @Column()
     private int id;
 
-    @Column( length = 255)
-     private String name;
+    @Column(length = 255)
+    private String name;
 
-
-    @Column( length = 255)
+    @Column(length = 255)
     private String description;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "demoday_id")
     private Demoday demoday;
-    
 
     public Demoday getDemoday() {
         return this.demoday;
