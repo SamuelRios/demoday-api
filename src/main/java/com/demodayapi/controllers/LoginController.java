@@ -25,7 +25,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@CrossOrigin(origins = "https://demoday-omega.vercel.app")
 public class LoginController {
     @Autowired
     FirebaseService firebaseService;
