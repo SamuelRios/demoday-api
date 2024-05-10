@@ -84,7 +84,7 @@ public class FirebaseService {
 			.build()
 			;
     }
-
+    
     public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
         String uid = decodedToken.getUid();
