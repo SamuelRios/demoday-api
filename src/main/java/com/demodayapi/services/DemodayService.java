@@ -24,6 +24,22 @@ public class DemodayService {
         return null;
     }
 
+    public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday) {
+        if (demoday.getAccCriteriaDemoday() == null) {
+            return true;
+        } else {
+            if (demoday.getEvalCriteriaDemoday() == null) {
+                return true;
+            } else {
+                if (demoday.getName() == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
     public List<Demoday> findAll() {
         return this.demodayRepository.findAll();
     }
@@ -34,17 +50,19 @@ public class DemodayService {
             return true;
         }
         return false;
-    }
-
-    public boolean validateExistFaseOne(Demoday demoday) {
-        // Realizar validações aqui
-        if (demoday.getPhaseOneInit() == null || demoday.getPhaseOneEnd() == null) {
-            return true;
-        }
-        return false;
-    }
+    }// precisa desse metodo?
 
     public boolean ValidateBiggestInitEndDate(Demoday demoday) {
+        LocalDate today = LocalDate.now();
+        System.out.println(today);
+        System.out.println(demoday.getPhaseOneInit());
+        if (demoday.getPhaseOneInit().isBefore(today)
+                || demoday.getPhaseTwoInit() != null && demoday.getPhaseTwoInit().isBefore(today)
+                || demoday.getPhaseThreeInit() != null && demoday.getPhaseThreeInit().isBefore(today)
+                || demoday.getPhaseFourInit() != null && demoday.getPhaseFourInit().isBefore(today)) {
+            System.out.println("ENTROU");
+            return true;
+        }
         // System.out.println(demoday.getPhaseOneInit().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         // System.out.println(demoday.getPhaseOneEnd().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         if (demoday.getPhaseOneInit().isBefore(demoday.getPhaseOneEnd()) && demoday.getPhaseTwoEnd() == null &&
@@ -107,27 +125,6 @@ public class DemodayService {
         return this.demodayRepository.getDemodayphaseFourNotNull();
     }
 
-    public Boolean hasNotDemodayInProgress() {
-        List<Demoday> demodayListphaseFourIsNull = this.getDemodayphaseFourIsNull();
-        List<Demoday> demodayListphaseFourIsNotNull = this.getDemodayphaseFourIsNotNull();
-        LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
-        for (Demoday demoday : demodayListphaseFourIsNull) {
-            if (demoday.getPhaseFourEnd() == null) {
-                System.out.println("demodayAtivo");
-                return false;
-            }
-        }
-        for (Demoday demoday : demodayListphaseFourIsNotNull) {
-            if (demoday.getPhaseFourEnd().isAfter(dataAtual)) {
-                System.out.println("demodayAtivo");
-                return false; // Se a fase FourEnd estiver após a data atual, significa que o Demoday está em
-                              // progresso
-            }
-        }
-        System.out.println("demodayinativo");
-        return true;
-    }
-
     public List<Demoday> getDemodayInProgress() {
         List<Demoday> demodayListphaseFourIsNull = this.getDemodayphaseFourIsNull();
         List<Demoday> demodayListphaseFourIsNotNull = this.getDemodayphaseFourIsNotNull();
@@ -157,7 +154,6 @@ public class DemodayService {
         Demoday demoday = this.getPhase1();
         LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
 
-        System.out.println("ENTROU NO LOOP");
         if (demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&
                 demoday.getPhaseOneEnd().isAfter(dataAtual) ||
                 demoday.getPhaseOneEnd().isEqual(dataAtual)) {

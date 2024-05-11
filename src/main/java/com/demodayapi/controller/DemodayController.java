@@ -1,5 +1,7 @@
 package com.demodayapi.controller;
+import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
+import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Demoday;
@@ -30,12 +32,12 @@ public class DemodayController {
     UserService userService;
 
     @GetMapping("/")
-    public String  hello(){
+    public String hello() {
         return "demoday-api is online";
     }
 
     @GetMapping("/demodays")
-    public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException{
+    public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException {
         List<Demoday> demodays = demodayService.findAll();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
@@ -44,30 +46,31 @@ public class DemodayController {
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
         try {
 
-            if(this.userService.isLoggedUserAdmin(request)){
-                if(this.demodayService.hasNotDemodayInProgress()){
-                    if (demodayService.ValidateBiggestInitEndDate(newDemoday)) throw new ValidateBiggestBetweenInitEndException();
+            List<Demoday> demodayInProgress= demodayService.getDemodayInProgress();
+
+            if (this.userService.isLoggedUserAdmin(request)) {
+                if ((demodayInProgress == null)) {
+                    if (demodayService.ValidateBiggestInitEndDate(newDemoday))
+                        throw new ValidateBiggestBetweenInitEndException();
+                        if(this.demodayService.verifyAccEvalCriteriaAndNameExists(newDemoday)) throw new AccEvalCriteriaNameCanNotBeNullException();
                     Demoday savedDemoday = demodayService.saveDemoday(newDemoday);
                     return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
-                    } throw new AreadyExistInProgressDemodayException();
-            } throw new UserIsNotAdminException();
+                }
+                throw new AreadyExistInProgressDemodayException();
+            }
+            throw new UserIsNotAdminException();
         } catch (ConstraintViolationException e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/getactivedemoday")
-    public ResponseEntity<List<Demoday>> getActiveDemoday() throws IOException, MethodArgumentNotValidException{
-    
-        List<Demoday> demodays = demodayService.getDemodayInProgress();
-        return new ResponseEntity<>(demodays, HttpStatus.OK);
+    public ResponseEntity<List<Demoday>> getActiveDemoday() throws IOException, MethodArgumentNotValidException {
+        List<Demoday> demoday = demodayService.getDemodayInProgress();
+        if (demoday == null)
+            throw new TherIsNotActiveDemodayException();
+        return new ResponseEntity<>(demoday, HttpStatus.OK);
     }
-    
+
 }
-
-
-
-
-
-

@@ -1,6 +1,5 @@
 package com.demodayapi.resources;
 
-
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
+import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -27,7 +28,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException exception,
+            HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
@@ -46,7 +48,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UserEmailAlreadyExistsException.class)
-    public ResponseEntity<StandardError> handleUserEmaillExistsExceptions(UserEmailAlreadyExistsException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleUserEmaillExistsExceptions(UserEmailAlreadyExistsException exception,
+            HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         errors.put("email", exception.getMessage());
@@ -60,7 +63,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UserCPFAlreadyExistsException.class)
-    public ResponseEntity<StandardError> handleUserCPFExistsExceptions(UserCPFAlreadyExistsException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleUserCPFExistsExceptions(UserCPFAlreadyExistsException exception,
+            HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         errors.put("cpf", exception.getMessage());
@@ -74,7 +78,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UserNotLoggedException.class)
-    public ResponseEntity<StandardError> handleUserNotLoggedExceptions(UserNotLoggedException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleUserNotLoggedExceptions(UserNotLoggedException exception,
+            HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         errors.put("logged", "false");
@@ -88,7 +93,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidateBiggestBetweenInitEndException.class)
-    public ResponseEntity<StandardError> handleValidateBiggestBetweenInitEndExceptions(ValidateBiggestBetweenInitEndException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleValidateBiggestBetweenInitEndExceptions(
+            ValidateBiggestBetweenInitEndException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");
@@ -102,7 +108,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(AreadyExistInProgressDemodayException.class)
-    public ResponseEntity<StandardError> handleAreadyExistInProgressDemodayExceptions(AreadyExistInProgressDemodayException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleAreadyExistInProgressDemodayExceptions(
+            AreadyExistInProgressDemodayException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");
@@ -116,7 +123,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UserIsNotAdminException.class)
-    public ResponseEntity<StandardError> handleUserIsNotAdminExceptions(UserIsNotAdminException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleUserIsNotAdminExceptions(UserIsNotAdminException exception,
+            HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");
@@ -130,7 +138,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ThereIsNotPeriodOfSubmissionException.class)
-    public ResponseEntity<StandardError> ThereIsNotPeriodOfSubmissionExceptions(ThereIsNotPeriodOfSubmissionException exception, HttpServletRequest request) {
+    public ResponseEntity<StandardError> ThereIsNotPeriodOfSubmissionExceptions(
+            ThereIsNotPeriodOfSubmissionException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");
@@ -141,5 +150,34 @@ public class RestExceptionHandler {
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
-    
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(TherIsNotActiveDemodayException.class)
+    public ResponseEntity<StandardError> TherIsNotActiveDemodayExceptions(TherIsNotActiveDemodayException exception,
+            HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AccEvalCriteriaNameCanNotBeNullException.class)
+    public ResponseEntity<StandardError> AccEvalCriteriaNameCanNotBeNullExceptions(
+            AccEvalCriteriaNameCanNotBeNullException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
 }

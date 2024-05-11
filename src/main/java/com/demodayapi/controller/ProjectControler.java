@@ -1,5 +1,4 @@
 package com.demodayapi.controller;
-
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.models.Demoday;
@@ -55,7 +54,7 @@ public class ProjectControler {
 
     @GetMapping("/getproject")
     public ResponseEntity<List<Project>> getProject() throws IOException, MethodArgumentNotValidException {
-
+        
         List<Project> project = projectService.findAll();
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
