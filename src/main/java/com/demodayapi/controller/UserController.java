@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
+import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.models.User;
 import com.demodayapi.services.FirebaseService;
@@ -35,6 +37,7 @@ public class UserController {
     UserService userService;
     @Autowired
     FirebaseService firebaseService;
+     
 
     @GetMapping("/pending")
     public ResponseEntity<List<User>> getPendingUsers() throws IOException, MethodArgumentNotValidException {
@@ -52,6 +55,7 @@ public class UserController {
                 throw new UserCPFAlreadyExistsException();
             userService.setUserStatus(user);
             String userId = this.firebaseService.createUser(user);
+            if (user.getType()==UserTypeEnum.ADMIN) throw new UserIsNotAdminException();  //protege rota contra criação de admin
             user.setId(userId);
             User savedUser = userService.saveUser(user);
             if (savedUser != null) {

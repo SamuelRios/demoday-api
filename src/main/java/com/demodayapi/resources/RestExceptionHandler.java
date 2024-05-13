@@ -20,6 +20,7 @@ import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
+import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -170,6 +171,21 @@ public class RestExceptionHandler {
     @ExceptionHandler(AccEvalCriteriaNameCanNotBeNullException.class)
     public ResponseEntity<StandardError> AccEvalCriteriaNameCanNotBeNullExceptions(
             AccEvalCriteriaNameCanNotBeNullException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserAlredyHasProjectCreatedException.class)
+    public ResponseEntity<StandardError> UserAlredyHasProjectCreatedExceptions(
+        UserAlredyHasProjectCreatedException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");

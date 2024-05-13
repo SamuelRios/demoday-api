@@ -24,14 +24,14 @@ public class DemodayService {
         return null;
     }
 
-    public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday) {
-        if (demoday.getAccCriteriaDemoday() == null) {
+    public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday){
+        if (demoday.getAccCriteriaDemoday()==null){
             return true;
-        } else {
-            if (demoday.getEvalCriteriaDemoday() == null) {
+        }else{
+            if(demoday.getEvalCriteriaDemoday()==null){
                 return true;
-            } else {
-                if (demoday.getName() == null) {
+            }else{
+                if (demoday.getName()==null) {
                     return true;
                 }
             }
@@ -50,16 +50,13 @@ public class DemodayService {
             return true;
         }
         return false;
-    }// precisa desse metodo?
+    }//precisa desse metodo?
 
     public boolean ValidateBiggestInitEndDate(Demoday demoday) {
         LocalDate today = LocalDate.now();
         System.out.println(today);
         System.out.println(demoday.getPhaseOneInit());
-        if (demoday.getPhaseOneInit().isBefore(today)
-                || demoday.getPhaseTwoInit() != null && demoday.getPhaseTwoInit().isBefore(today)
-                || demoday.getPhaseThreeInit() != null && demoday.getPhaseThreeInit().isBefore(today)
-                || demoday.getPhaseFourInit() != null && demoday.getPhaseFourInit().isBefore(today)) {
+        if (demoday.getPhaseOneInit().isBefore(today)||demoday.getPhaseTwoInit()!=null && demoday.getPhaseTwoInit().isBefore(today) || demoday.getPhaseThreeInit()!=null&& demoday.getPhaseThreeInit().isBefore(today) ||demoday.getPhaseFourInit()!= null && demoday.getPhaseFourInit().isBefore(today) ) {
             System.out.println("ENTROU");
             return true;
         }
@@ -146,12 +143,12 @@ public class DemodayService {
         return null;
     }
 
-    public Demoday getPhase1() {
+    public Demoday getDemodayWithBiggestValuePhase1() {
         return this.demodayRepository.getPhase1();
     }
 
     public DemodayStatusEnum verifyphase1InProgress() {
-        Demoday demoday = this.getPhase1();
+        Demoday demoday = this.getDemodayWithBiggestValuePhase1();
         LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
 
         if (demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&

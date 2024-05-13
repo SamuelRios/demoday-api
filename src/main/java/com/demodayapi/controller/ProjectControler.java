@@ -1,6 +1,7 @@
 package com.demodayapi.controller;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
+import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
@@ -39,9 +40,11 @@ public class ProjectControler {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
             if (demodayStatus != DemodayStatusEnum.PHASE1)
                 throw new ThereIsNotPeriodOfSubmissionException();
-            Demoday demoday = demodayService.getPhase1();
+            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
             newProject.setDemoday(demoday);
             User user = userService.getLoggedUser(request);
+            if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
+             throw new UserAlredyHasProjectCreatedException();
             newProject.setUser(user);
             Project savedProject = projectService.saveProject(newProject);
             return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
