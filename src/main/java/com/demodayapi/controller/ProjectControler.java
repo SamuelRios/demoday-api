@@ -62,4 +62,11 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @GetMapping("/getdemodayprojects")
+    public ResponseEntity<List<Project>> findSubmitted(){
+        List<Project> projectSubmitted = projectService.findSubmitted();
+        return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
+    }
+
+
 }

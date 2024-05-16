@@ -1,5 +1,7 @@
 package com.demodayapi.services;
 import java.util.List;
+
+import com.demodayapi.enums.ProjectStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,10 @@ public class ProjectService {
   }
   return false; // Se não encontrar nenhum projeto associado ao usuário retorna false
 }
+
+  public List<Project> findSubmitted(){
+    return projectRepository.findByStatus(ProjectStatusEnum.SUBMETIDO);
+  }
 
 }
 
