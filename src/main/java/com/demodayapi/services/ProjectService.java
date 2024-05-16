@@ -56,6 +56,9 @@ public class ProjectService {
   public List<Project> findSubmitted(){
     return projectRepository.findByStatus(ProjectStatusEnum.SUBMETIDO);
   }
+  public List<Project> findAccepted(){
+    return projectRepository.findByStatus(ProjectStatusEnum.ACEITO);
+  }
 
 }
 

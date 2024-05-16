@@ -68,5 +68,11 @@ public class ProjectControler {
         return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
     }
 
+    @GetMapping("/getdemodayacceptedprojects")
+    public ResponseEntity<List<Project>> findAccepted(){
+        List<Project> projectAccepted = projectService.findAccepted();
+        return new ResponseEntity<>(projectAccepted, HttpStatus.OK);
+    }
+
 
 }
