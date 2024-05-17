@@ -56,7 +56,9 @@ public class CommitteeService {
     }
 
 
-
+    public List<Committee> getAllCommittees() {
+        return committeeDemodayRepository.findAll();
+    }
 
 }
  
