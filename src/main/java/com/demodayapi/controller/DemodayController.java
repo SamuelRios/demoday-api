@@ -5,6 +5,7 @@ import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.User;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -77,10 +78,9 @@ public class DemodayController {
 
 
      @DeleteMapping("/deletedemoday/{id}")
-        public ResponseEntity<Void> deleteDemoday(@PathVariable int id) {
-
-       demodayService.deleteDemodayById(id);
-            
+        public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
+        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+       demodayService.deleteDemodayById(id);   
         return ResponseEntity.noContent().build();
     }
 

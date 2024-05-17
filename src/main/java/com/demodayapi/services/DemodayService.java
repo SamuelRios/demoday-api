@@ -167,9 +167,8 @@ public class DemodayService {
     @Transactional
     public void deleteDemodayById(int id) {
         Demoday demoday = demodayRepository.findById(id);
-        System.out.println(" nulo");
         if (demoday != null) {
-            System.out.println("diferente de nulo");
+             
             demodayRepository.delete(demoday);
         }
     }
