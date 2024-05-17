@@ -36,7 +36,7 @@ public class DemodayController {
         return "demoday-api is online";
     }
 
-    @GetMapping("/demodays")
+    @GetMapping("/getdemodayinfo")
     public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException {
         List<Demoday> demodays = demodayService.findAll();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
@@ -72,5 +72,6 @@ public class DemodayController {
             throw new TherIsNotActiveDemodayException();
         return new ResponseEntity<>(demoday, HttpStatus.OK);
     }
+
 
 }
