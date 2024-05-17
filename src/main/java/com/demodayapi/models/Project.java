@@ -2,6 +2,8 @@ package com.demodayapi.models;
 import java.time.Year;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
+import com.demodayapi.enums.UserTypeEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -214,6 +216,11 @@ public class Project {
 
     public ProjectTypeEnum getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        if(type != null)
+            this.type = ProjectTypeEnum.valueOf(type);
     }
 
     public void setProjectType(String type) {
