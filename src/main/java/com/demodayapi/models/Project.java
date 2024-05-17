@@ -1,7 +1,6 @@
 package com.demodayapi.models;
 import java.time.Year;
 import java.util.List;
-
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
 import jakarta.persistence.Column;
@@ -79,6 +78,7 @@ public class Project {
 
 
     @ElementCollection
+    @Column(name = "emails", nullable = true)
     private List<String> emails;
     
    

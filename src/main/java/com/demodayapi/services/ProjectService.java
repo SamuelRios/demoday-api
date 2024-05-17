@@ -2,21 +2,18 @@ package com.demodayapi.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.demodayapi.models.Demoday;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
 import com.demodayapi.repositories.ProjectRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProjectService {
   @Autowired
   private ProjectRepository projectRepository;
 
-  @Autowired
-  private DemodayService demodayService;
 
   @Autowired
   private UserService userService;
@@ -51,6 +48,14 @@ public class ProjectService {
   return false; // Se não encontrar nenhum projeto associado ao usuário retorna false
 }
 
+@Transactional
+public void deleteProjectById(int id) {
+    Project project = projectRepository.findById(id).orElse(null);
+    if (project != null) {   // Excluir os e-mails associados ao projeto
+        project.setEmails(null); 
+        projectRepository.delete(project);
+    }
+}
 }
 
 

@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +42,7 @@ public class ProjectControler {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
             if (demodayStatus != DemodayStatusEnum.PHASE1)
                 throw new ThereIsNotPeriodOfSubmissionException();
-            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
+            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1(); 
             newProject.setDemoday(demoday);
             User user = userService.getLoggedUser(request);
             if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
@@ -62,4 +64,16 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+
+     @DeleteMapping("/deleteprojects/{id}")
+        public ResponseEntity<Void> deleteProject(@PathVariable int id) {
+        projectService.deleteProjectById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    
+
 }
+
+
+
