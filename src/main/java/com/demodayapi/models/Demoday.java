@@ -223,18 +223,6 @@ public class Demoday {
 	}
 
 
-	 
-
-
-	
-
-
-	 
-
-
-
-   
-     
 
 }
  

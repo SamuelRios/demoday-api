@@ -12,7 +12,7 @@ public interface CommitteeRepository extends CrudRepository<Committee, Integer>{
 
     List <Committee> findAll();
     void deleteById(int Id);
-    
-  
+
+
 }
 

@@ -77,6 +77,37 @@ public class CommitteeControler {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/adddemodaycommittee")
+    public ResponseEntity<Committee> addDemodayAndUsersToCommittee(@RequestBody AddDemodayCommitteeRequest request) {
+        try {
+            Committee committee = committeeService.addDemodayAndUsers(request.getDemodayId(), request.getUserIds());
+            return new ResponseEntity<>(committee, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+}
+
+class AddDemodayCommitteeRequest {
+    private int demodayId;
+    private List<String> userIds;
+
+    public int getDemodayId() {
+        return demodayId;
+    }
+
+    public void setDemodayId(int demodayId) {
+        this.demodayId = demodayId;
+    }
+
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
+
     }
 
 

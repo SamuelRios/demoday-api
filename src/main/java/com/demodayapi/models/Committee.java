@@ -1,6 +1,7 @@
 package com.demodayapi.models;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,20 +21,16 @@ public class Committee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
-   
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "demoday_id")
     private Demoday demoday;
-    
+
     @ManyToMany
-    
     @JoinTable(joinColumns = @JoinColumn(name = "committee_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
-    
 
-   
     public List<User> getUsers() {
         return users;
     }
@@ -50,7 +47,6 @@ public class Committee {
         this.demoday = demoday;
     }
  
-     
 
 }
  

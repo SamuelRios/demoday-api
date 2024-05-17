@@ -24,4 +24,6 @@ public interface DemodayRepository extends CrudRepository<Demoday, Integer> {
     @Query("SELECT u FROM Demoday u ORDER BY u.phaseOneInit DESC LIMIT 1")
     Demoday getPhase1();
 
+
+
 }
