@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import java.util.List;
 import com.demodayapi.models.User;
 import org.springframework.beans.factory.annotation.Autowired;

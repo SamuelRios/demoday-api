@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;

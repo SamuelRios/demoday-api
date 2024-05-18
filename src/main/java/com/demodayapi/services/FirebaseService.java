@@ -1,10 +1,13 @@
 package com.demodayapi.services;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -28,9 +31,10 @@ public class FirebaseService {
     @Autowired
     private FirebaseClient firebaseClient;
 
+    private int cookieTimeInHours = 10;
+
     @Value("${demoday.domain}")
     private String domain;
-    // private String domain = "localhost:3200";
 
     private Long expiresIn = TimeUnit.DAYS.toMillis(1);
 
@@ -63,19 +67,24 @@ public class FirebaseService {
         return true;
     }
 
-    public Cookie createSessionCookie(String userToken) throws FirebaseAuthException, IOException{
-        System.out.println(this.domain);
+
+    public String createSessionToken(String userToken) throws FirebaseAuthException, IOException{
         SessionCookieOptions options = SessionCookieOptions.builder().setExpiresIn(this.expiresIn).build();
-        String sessionCookie = this.firebaseClient.getInstance().createSessionCookie(userToken, options);
-        Cookie tokenCookie = new Cookie("session", sessionCookie);
-        tokenCookie.setMaxAge(36000);
-        tokenCookie.setSecure(true);
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setDomain(this.domain);
-        tokenCookie.setPath("/");
-        return tokenCookie;
+        return this.firebaseClient.getInstance().createSessionCookie(userToken, options);
     }
 
+    public ResponseCookie createSessionCookie(String userToken) throws FirebaseAuthException, IOException{
+        return ResponseCookie.from("session", this.createSessionToken(userToken)) // key & value
+			.httpOnly(true)
+			.secure(true)
+			// .domain(this.domain)
+			// .path("/")
+			.maxAge(Duration.ofHours(this.cookieTimeInHours))
+			.sameSite("None")
+			.build()
+			;
+    }
+    
     public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
         FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
         String uid = decodedToken.getUid();
@@ -83,13 +92,16 @@ public class FirebaseService {
     }
 
     public HttpServletResponse setSessionCookieNull(HttpServletResponse requestResponse){
-        Cookie tokenCookie = new Cookie("session", null);
-        tokenCookie.setMaxAge(0);
-        tokenCookie.setSecure(true);
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setDomain(this.domain);
-        tokenCookie.setPath("/");
-        requestResponse.addCookie(tokenCookie);
+        ResponseCookie responseCookie = ResponseCookie.from("session", null)
+			.httpOnly(true)
+			.secure(true)
+			// .domain("localhost")
+			// .path("/")
+			.maxAge(Duration.ofHours(0))
+			.sameSite("None")
+			.build()
+			;
+        requestResponse.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
         return requestResponse;
     }
     
@@ -97,6 +109,7 @@ public class FirebaseService {
         String sessionCookieValue = null;
 		try {
 			Cookie[] cookies = request.getCookies();
+            System.out.println(cookies.length);
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().equals("session")) {
@@ -105,8 +118,11 @@ public class FirebaseService {
 				}
 			}
 			if (sessionCookieValue != null) {
+                System.out.println("AQUI O COOKIE SESSAO valor:");
+                System.out.println(sessionCookieValue);
 				return this.checkSessionCookie(sessionCookieValue);
 			} else {
+                System.out.println("SEM SESSAO");
 				return null;
 			}
 		} catch (Exception e) {

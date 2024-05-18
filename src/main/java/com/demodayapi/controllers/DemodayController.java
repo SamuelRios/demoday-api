@@ -1,11 +1,10 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Demoday;
-import com.demodayapi.models.User;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
