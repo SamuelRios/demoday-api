@@ -1,7 +1,8 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
+import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
@@ -17,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +44,7 @@ public class ProjectControler {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
             if (demodayStatus != DemodayStatusEnum.PHASE1)
                 throw new ThereIsNotPeriodOfSubmissionException();
-            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
+            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1(); 
             newProject.setDemoday(demoday);
             User user = userService.getLoggedUser(request);
             if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
@@ -76,5 +79,20 @@ public class ProjectControler {
         return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
     }
 
+    @GetMapping("/getdemodayacceptedprojects")
+    public ResponseEntity<List<Project>> findAccepted(){
+        List<Project> projectAccepted = projectService.findAccepted();
+        return new ResponseEntity<>(projectAccepted, HttpStatus.OK);
+    }
+
+     @DeleteMapping("/deleteprojects/{id}")
+        public ResponseEntity<Void> deleteProject(@PathVariable int id,HttpServletRequest request) {
+        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+        projectService.deleteProjectById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
+
+
+
