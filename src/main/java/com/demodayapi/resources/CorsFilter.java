@@ -13,7 +13,7 @@ public class CorsFilter extends OncePerRequestFilter {
 
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
         "https://demoday-omega.vercel.app",
-        "https://localhost:3000"
+        "http://localhost:3000"
     );
 
     @Override
