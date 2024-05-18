@@ -59,6 +59,9 @@ public class UserService {
     public List<User> findAllPending(){
         return this.userRepository.findByStatus(UserStatusEnum.PENDING);
     }
+    public List<User> findAllProfessor(){
+        return this.userRepository.findByType(UserTypeEnum.PROFESSOR);
+    }
     
     public User getLoggedUser(HttpServletRequest request){
         try{

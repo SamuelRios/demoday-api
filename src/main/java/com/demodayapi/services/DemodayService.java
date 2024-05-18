@@ -2,6 +2,8 @@ package com.demodayapi.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demodayapi.enums.DemodayStatusEnum;
@@ -167,10 +169,10 @@ public class DemodayService {
     @Transactional
     public void deleteDemodayById(int id) {
         Demoday demoday = demodayRepository.findById(id);
-        System.out.println(" nulo");
         if (demoday != null) {
-            System.out.println("diferente de nulo");
+             
             demodayRepository.delete(demoday);
         }
     }
+
 }
