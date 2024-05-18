@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,10 +59,17 @@ public class ProjectControler {
         }
     }
 
-    @GetMapping("/getproject")
-    public ResponseEntity<List<Project>> getProject() throws IOException, MethodArgumentNotValidException {
+    @GetMapping("/getallprojects")
+    public ResponseEntity<List<Project>> getAllProjects() throws IOException, MethodArgumentNotValidException {
         
         List<Project> project = projectService.findAll();
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+    @GetMapping("/getproject")
+    public ResponseEntity <Project> getProject(@RequestParam(defaultValue = "id") int id) throws IOException, MethodArgumentNotValidException {
+        
+        Project project = projectService.findById(id);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 

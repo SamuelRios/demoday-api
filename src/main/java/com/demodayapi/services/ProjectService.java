@@ -29,6 +29,10 @@ public class ProjectService {
     return this.projectRepository.findAll();
   }
 
+  public Project findById(int id) {
+    return this.projectRepository.findById(id);
+  }
+
   public List<Project> projectsOfMostRecentDemoday() {
     return this.projectRepository.listProjectsOfMostRecentDemoday();
   }
