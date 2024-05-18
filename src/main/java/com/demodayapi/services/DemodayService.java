@@ -2,11 +2,15 @@ package com.demodayapi.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.repositories.DemodayRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class DemodayService {
@@ -16,7 +20,6 @@ public class DemodayService {
 
     public Demoday saveDemoday(Demoday newDemoday) {
         if (newDemoday != null) {
-
             Demoday savedDemoday = this.demodayRepository.save(newDemoday);
             return this.demodayRepository.save(savedDemoday);
 
@@ -24,14 +27,14 @@ public class DemodayService {
         return null;
     }
 
-    public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday){
-        if (demoday.getAccCriteriaDemoday()==null){
+    public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday) {
+        if (demoday.getAccCriteriaDemoday() == null) {
             return true;
-        }else{
-            if(demoday.getEvalCriteriaDemoday()==null){
+        } else {
+            if (demoday.getEvalCriteriaDemoday() == null) {
                 return true;
-            }else{
-                if (demoday.getName()==null) {
+            } else {
+                if (demoday.getName() == null) {
                     return true;
                 }
             }
@@ -50,13 +53,16 @@ public class DemodayService {
             return true;
         }
         return false;
-    }//precisa desse metodo?
+    }// precisa desse metodo?
 
     public boolean ValidateBiggestInitEndDate(Demoday demoday) {
         LocalDate today = LocalDate.now();
         System.out.println(today);
         System.out.println(demoday.getPhaseOneInit());
-        if (demoday.getPhaseOneInit().isBefore(today)||demoday.getPhaseTwoInit()!=null && demoday.getPhaseTwoInit().isBefore(today) || demoday.getPhaseThreeInit()!=null&& demoday.getPhaseThreeInit().isBefore(today) ||demoday.getPhaseFourInit()!= null && demoday.getPhaseFourInit().isBefore(today) ) {
+        if (demoday.getPhaseOneInit().isBefore(today)
+                || demoday.getPhaseTwoInit() != null && demoday.getPhaseTwoInit().isBefore(today)
+                || demoday.getPhaseThreeInit() != null && demoday.getPhaseThreeInit().isBefore(today)
+                || demoday.getPhaseFourInit() != null && demoday.getPhaseFourInit().isBefore(today)) {
             System.out.println("ENTROU");
             return true;
         }
@@ -150,13 +156,23 @@ public class DemodayService {
     public DemodayStatusEnum verifyphase1InProgress() {
         Demoday demoday = this.getDemodayWithBiggestValuePhase1();
         LocalDate dataAtual = LocalDate.now(); // Obtém a data atual
-
-        if (demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&
-                demoday.getPhaseOneEnd().isAfter(dataAtual) ||
-                demoday.getPhaseOneEnd().isEqual(dataAtual)) {
-            return DemodayStatusEnum.PHASE1;
-        }
+        if (demoday != null)
+            if (demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&
+                    demoday.getPhaseOneEnd().isAfter(dataAtual) ||
+                    demoday.getPhaseOneEnd().isEqual(dataAtual)) {
+                return DemodayStatusEnum.PHASE1;
+            }
 
         return DemodayStatusEnum.FINISHEDPHASE;
     }
+
+    @Transactional
+    public void deleteDemodayById(int id) {
+        Demoday demoday = demodayRepository.findById(id);
+        if (demoday != null) {
+             
+            demodayRepository.delete(demoday);
+        }
+    }
+
 }
