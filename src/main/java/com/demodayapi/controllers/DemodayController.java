@@ -79,7 +79,7 @@ public class DemodayController {
      @DeleteMapping("/deletedemoday/{id}")
         public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
         if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
-       demodayService.deleteDemodayById(id);   
+        demodayService.deleteDemodayById(id); 
         return ResponseEntity.noContent().build();
     }
 
