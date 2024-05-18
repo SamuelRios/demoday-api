@@ -65,6 +65,17 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @GetMapping("/getdemodayprojects")
+    public ResponseEntity<List<Project>> findSubmitted(){
+        List<Project> projectSubmitted = projectService.findSubmitted();
+        return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
+    }
+
+    @GetMapping("/getdemodayacceptedprojects")
+    public ResponseEntity<List<Project>> findAccepted(){
+        List<Project> projectAccepted = projectService.findAccepted();
+        return new ResponseEntity<>(projectAccepted, HttpStatus.OK);
+    }
 
      @DeleteMapping("/deleteprojects/{id}")
         public ResponseEntity<Void> deleteProject(@PathVariable int id,HttpServletRequest request) {
@@ -72,8 +83,6 @@ public class ProjectControler {
         projectService.deleteProjectById(id);
         return ResponseEntity.noContent().build();
     }
-
-    
 
 }
 
