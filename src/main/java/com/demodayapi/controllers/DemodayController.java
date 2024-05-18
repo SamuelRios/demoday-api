@@ -47,15 +47,19 @@ public class DemodayController {
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
         try {
-
+            System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 1");
             List<Demoday> demodayInProgress= demodayService.getDemodayInProgress();
 
             if (this.userService.isLoggedUserAdmin(request)) {
+                System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 2");
                 if ((demodayInProgress == null)) {
+                    System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 3");
                     if (demodayService.ValidateBiggestInitEndDate(newDemoday))
                         throw new ValidateBiggestBetweenInitEndException();
+                        System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 4");
                         if(this.demodayService.verifyAccEvalCriteriaAndNameExists(newDemoday)) throw new AccEvalCriteriaNameCanNotBeNullException();
                     Demoday savedDemoday = demodayService.saveDemoday(newDemoday);
+                    System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 5");
                     return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
                 }
                 throw new AreadyExistInProgressDemodayException();

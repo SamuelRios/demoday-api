@@ -28,6 +28,7 @@ public class DemodayService {
     }
 
     public boolean verifyAccEvalCriteriaAndNameExists(Demoday demoday) {
+        System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 6");
         if (demoday.getAccCriteriaDemoday() == null) {
             return true;
         } else {
