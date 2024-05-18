@@ -3,9 +3,7 @@ package com.demodayapi.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,9 +26,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class LoginController {
     @Autowired
     FirebaseService firebaseService;
-
-	@Value("${demoday.domain}")
-    private String domain = "localhost";
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestParam(defaultValue = "userToken") String userToken, HttpServletResponse requestResponse) throws IOException, MethodArgumentNotValidException {

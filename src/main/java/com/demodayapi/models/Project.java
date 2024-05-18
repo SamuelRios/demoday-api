@@ -1,14 +1,17 @@
 package com.demodayapi.models;
-
 import java.time.Year;
+import java.util.List;
 import com.demodayapi.enums.ProjectStatusEnum;
+import com.demodayapi.enums.ProjectTypeEnum;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -17,16 +20,14 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="projects")
-public class SubmitProject {
+public class Project {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable=false,columnDefinition = "TINYINT")
-    @NotBlank(message = "O periodo do curso é obrigatório")
-    @Size(min = 1, message = "O periodo do curso deve ter no mínimo 1 caracter.")
-    private byte  period;
+    @Column(nullable=false)
+    private Integer  period;
 
     @Column(nullable=false, length = 255) 
     @NotBlank(message = "título é obrigatório.")
@@ -48,8 +49,6 @@ public class SubmitProject {
     private String professor;
 
     @Column(nullable=false, length = 4, columnDefinition = "YEAR")
-    @Size(min = 4, max = 4, message = "O ano deve conter 4 caracteres")
-    @NotBlank(message = "O ano é obrigatório.")
     private Year year;
 
     @Column(nullable=false, length = 500)
@@ -70,24 +69,32 @@ public class SubmitProject {
     private String linkdoc;
     
     @Column(nullable=false)
-    @NotNull(message = "status é obrigatório.")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatusEnum status;
 
-    @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
-    private byte[] image;
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private ProjectTypeEnum type;
+
+
+    @ElementCollection
+    @Column(name = "emails", nullable = true)
+    private List<String> emails;
+    
+   
+
+    @Column(length = 500)
+    private String image;
        
     @ManyToOne
     @JoinColumn(name = "demoday_id")
-    @NotNull(message = "É necessario ter um demoday cadastrado.")
     private Demoday demoday;
+
     
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull(message = "É necessario ter um usuario cadastrado.")
     private User user;
-
-   
 
 
     // Getters and Setters
@@ -99,11 +106,11 @@ public class SubmitProject {
         this.id = id;
     }
 
-    public byte getPeriod() {
+    public int getPeriod() {
         return period;
     }
 
-    public void setPeriod(byte period) {
+    public void setPeriod(int period) {
         this.period = period;
     }
 
@@ -195,23 +202,51 @@ public class SubmitProject {
         this.user = user;
     }
 
-    public String getStatus() {
-        return status;
+
+    public ProjectStatusEnum getStatus() {
+        return this.status;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = ProjectStatusEnum.valueOf(status);
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public ProjectStatusEnum getType() {
-        return ProjectStatusEnum.valueOf(this.status);
+
+    public ProjectTypeEnum getType() {
+        return type;
+    }
+
+    public void setProjectType(String type) {
+        this.type = ProjectTypeEnum.valueOf(type);
+    }
+
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+    public void setStatus(ProjectStatusEnum status) {
+        this.status = status;
+    }
+
+    public void setType(ProjectTypeEnum type) {
+        this.type = type;
+    }
+
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
     }
 }
+
+   

@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,53 +31,63 @@ public class Demoday {
     @Column(nullable=false,columnDefinition = "INT")
     private int year;
 
-	@Future
+	@FutureOrPresent
 	@NotNull
     @Column(columnDefinition = "DATE")
     private LocalDate phaseOneInit ;
 
-	@Future
+	@FutureOrPresent
 	@NotNull
     @Column(columnDefinition = "DATE")
     private LocalDate phaseOneEnd ;
 
-	@Future
+	@FutureOrPresent
     @Column(columnDefinition = "DATE")
     private LocalDate phaseTwoInit ;
 
-    @Future
+    @FutureOrPresent
     @Column( columnDefinition = "DATE")
     private LocalDate phaseTwoEnd ;
 
-	@Future
+	@FutureOrPresent
     @Column( columnDefinition = "DATE")
     private LocalDate phaseThreeInit ;
 
-	@Future
+	@FutureOrPresent
     @Column( columnDefinition = "DATE")
     private LocalDate phaseThreeEnd ;
 
-	@Future
+	@FutureOrPresent
     @Column(columnDefinition = "DATE")
     private LocalDate phaseFourInit ;
 
-    @Future
+    @FutureOrPresent
     @Column(columnDefinition = "DATE")
     private LocalDate phaseFourEnd ;
 
-	@OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
+	 
+     
+
+	
+
+	@OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
     private List<AccCriteriaDemoday> accCriteriaDemoday ;
 	
-    @OneToMany(mappedBy ="demoday",cascade= CascadeType.ALL)
+    @OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
     private List<EvalCriteriaDemoday> evalCriteriaDemoday ;
     
+	@OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
+    private List<Project> project ;
 
 	@PrePersist
 	public void prePersist(){
 	this.accCriteriaDemoday.forEach( i -> i.setDemoday(this));
 	this.evalCriteriaDemoday.forEach( i -> i.setDemoday(this));
+	
 
 	}
+ 
+
 
 	 
 
@@ -212,6 +222,8 @@ public class Demoday {
 		return  evalCriteriaDemoday;
 	}
 
+
+	 
 
 
 	

@@ -1,5 +1,6 @@
 
 package com.demodayapi.models;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="acc_criteria")
+@Table(name = "acc_criteria")
 
 public class AccCriteriaDemoday {
 
@@ -22,15 +23,13 @@ public class AccCriteriaDemoday {
     @Column(length = 255)
     private String name;
 
-
     @Column(length = 255)
     private String description;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "demoday_id")
-     private Demoday demoday;
-
+    private Demoday demoday;
 
     public Demoday getDemoday() {
         return this.demoday;
@@ -64,6 +63,4 @@ public class AccCriteriaDemoday {
         this.description = description;
     }
 
-   
-    
 }

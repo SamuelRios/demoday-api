@@ -63,13 +63,19 @@ public class UserService {
     public User getLoggedUser(HttpServletRequest request){
         try{
             String userId = this.firebaseService.getLoggedUserId(request);
-            System.out.println(userId);
+            // System.out.println(userId);
             if(userId != null)
                 return this.userRepository.findById(userId).get();
             else throw new UserNotLoggedException();
         } catch (Exception e){
             throw new UserNotLoggedException();
         }
+    }
+
+    public Boolean isLoggedUserAdmin(HttpServletRequest request){
+        User loggedUser = this.getLoggedUser(request);
+        if(loggedUser.getType().equals(UserTypeEnum.ADMIN)) return true;
+        else return false;
     }
 
 }
