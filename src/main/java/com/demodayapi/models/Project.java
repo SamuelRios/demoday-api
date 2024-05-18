@@ -1,8 +1,10 @@
 package com.demodayapi.models;
 import java.time.Year;
+import java.util.List;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -74,6 +76,12 @@ public class Project {
     @Enumerated(EnumType.STRING)
     private ProjectTypeEnum type;
 
+
+    @ElementCollection
+    @Column(name = "emails", nullable = true)
+    private List<String> emails;
+    
+   
 
     @Column(length = 500)
     private String image;
@@ -219,4 +227,26 @@ public class Project {
     public void setProjectType(String type) {
         this.type = ProjectTypeEnum.valueOf(type);
     }
+
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+    public void setStatus(ProjectStatusEnum status) {
+        this.status = status;
+    }
+
+    public void setType(ProjectTypeEnum type) {
+        this.type = type;
+    }
+
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
+    }
 }
+
+   
