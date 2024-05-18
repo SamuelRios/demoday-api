@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,5 +75,12 @@ public class DemodayController {
         return new ResponseEntity<>(demoday, HttpStatus.OK);
     }
 
+
+     @DeleteMapping("/deletedemoday/{id}")
+        public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
+        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+        demodayService.deleteDemodayById(id); 
+        return ResponseEntity.noContent().build();
+    }
 
 }
