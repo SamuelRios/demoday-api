@@ -59,12 +59,14 @@ public class UserService {
     public List<User> findAllPending(){
         return this.userRepository.findByStatus(UserStatusEnum.PENDING);
     }
+    public List<User> findAllProfessor(){
+        return this.userRepository.findByType(UserTypeEnum.PROFESSOR);
+    }
     
     public User getLoggedUser(HttpServletRequest request){
         try{
             String userId = this.firebaseService.getLoggedUserId(request);
-            System.out.println("userId: AQQQQQQ");
-            System.out.println(userId);
+            // System.out.println(userId);
             if(userId != null)
                 return this.userRepository.findById(userId).get();
             else throw new UserNotLoggedException();
