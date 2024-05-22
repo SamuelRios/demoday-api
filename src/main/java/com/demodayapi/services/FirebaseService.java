@@ -77,16 +77,14 @@ public class FirebaseService {
         return ResponseCookie.from("session", this.createSessionToken(userToken)) // key & value
 			.httpOnly(true)
 			.secure(true)
-			// .domain(this.domain)
-			// .path("/")
 			.maxAge(Duration.ofHours(this.cookieTimeInHours))
 			.sameSite("None")
 			.build()
 			;
     }
     
-    public String checkSessionCookie(String sessionCookieValue) throws FirebaseAuthException, IOException{
-        FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionCookieValue);
+    public String checkSessionToken(String sessionToken) throws FirebaseAuthException, IOException{
+        FirebaseToken decodedToken = this.firebaseClient.getInstance().verifySessionCookie(sessionToken);
         String uid = decodedToken.getUid();
         return uid;
     }
@@ -95,8 +93,6 @@ public class FirebaseService {
         ResponseCookie responseCookie = ResponseCookie.from("session", null)
 			.httpOnly(true)
 			.secure(true)
-			// .domain("localhost")
-			// .path("/")
 			.maxAge(Duration.ofHours(0))
 			.sameSite("None")
 			.build()
@@ -106,21 +102,21 @@ public class FirebaseService {
     }
     
     public String getLoggedUserId(HttpServletRequest request){
-        String sessionCookieValue = null;
+        String sessionToken = null;
 		try {
 			Cookie[] cookies = request.getCookies();
             System.out.println(cookies.length);
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().equals("session")) {
-						sessionCookieValue = cookie.getValue();
+						sessionToken = cookie.getValue();
 					}
 				}
 			}
-			if (sessionCookieValue != null) {
+			if (sessionToken != null) {
                 System.out.println("AQUI O COOKIE SESSAO valor:");
-                System.out.println(sessionCookieValue);
-				return this.checkSessionCookie(sessionCookieValue);
+                System.out.println(sessionToken);
+				return this.checkSessionToken(sessionToken);
 			} else {
                 System.out.println("SEM SESSAO");
 				return null;
@@ -128,7 +124,14 @@ public class FirebaseService {
 		} catch (Exception e) {
             return null;
 		}
-        
+    }
+
+    public String getLoggedUserId(String sessionToken){
+        try{
+            return this.checkSessionToken(sessionToken);	
+		} catch (Exception e) {
+            return null;
+		}
     }
 
 

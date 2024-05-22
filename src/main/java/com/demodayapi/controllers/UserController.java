@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -40,22 +40,24 @@ public class UserController {
      
 
     @GetMapping("/pending")
-    public ResponseEntity<List<User>> getPendingUsers() throws IOException, MethodArgumentNotValidException {
-        List<User> users = userService.findAllPending();
-        return new ResponseEntity(users, HttpStatus.OK);
+    public ResponseEntity<List<User>> getPendingUsers(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
+        if(this.userService.isLoggedUserAdmin(request)){
+            List<User> users = userService.findAllPending();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+       }
+       throw new UserIsNotAdminException();
     }
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody User user)
             throws IOException, MethodArgumentNotValidException {
         try {
-            if (userService.existsEmail(user.getCpf()))
+            if (userService.existsEmail(user.getEmail()))
                 throw new UserEmailAlreadyExistsException();
             if (userService.existsCPF(user.getCpf()))
                 throw new UserCPFAlreadyExistsException();
-            userService.setUserStatus(user);
+            userService.setCreatedUserStatus(user);
             String userId = this.firebaseService.createUser(user);
-            if (user.getType()==UserTypeEnum.ADMIN) throw new UserIsNotAdminException();  //protege rota contra criação de admin
             user.setId(userId);
             User savedUser = userService.saveUser(user);
             if (savedUser != null) {
@@ -74,8 +76,11 @@ public class UserController {
     }
 
     @GetMapping("/getusers")
-    public ResponseEntity<List<User>> getusers() {
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<User>> getusers(HttpServletRequest request) {
+        if(this.userService.isLoggedUserAdmin(request)){
+            return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+       }
+       throw new UserIsNotAdminException();
     }
 
     @GetMapping("/loggeduser")
@@ -86,5 +91,14 @@ public class UserController {
         else
             throw new UserNotLoggedException();
     }
+
+    @PostMapping("/setuserstatus")
+    public User setUserStatus(HttpServletRequest request, @RequestParam(defaultValue = "userId") String userId, @RequestParam(defaultValue = "userStatus") String userStatus) {
+       if(this.userService.isLoggedUserAdmin(request)){
+            return this.userService.setUserStatus(userId, userStatus);
+       }
+       throw new UserIsNotAdminException();
+    }
+    
 
 }

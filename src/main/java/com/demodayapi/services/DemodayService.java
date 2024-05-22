@@ -150,6 +150,10 @@ public class DemodayService {
         return null;
     }
 
+    public List<Demoday> getAllDemodays(){
+        return this.demodayRepository.findAll();
+    }
+
     public Demoday getDemodayWithBiggestValuePhase1() {
         return this.demodayRepository.getPhase1();
     }
