@@ -1,19 +1,20 @@
 package com.demodayapi.models;
 import java.util.List;
-
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="comission")
+@Table(name="committee")
 public class Committee {
 
     @Id()
@@ -21,26 +22,9 @@ public class Committee {
     private int id;
 
 
-   
-    @ManyToOne
-    @JoinColumn(name = "demoday_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "demoday")
     private Demoday demoday;
-    
-    @ManyToMany
-    
-    @JoinTable(joinColumns = @JoinColumn(name = "committee_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users;
-
-    
-
-   
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     public Demoday getDemoday() {
         return demoday;
@@ -49,8 +33,6 @@ public class Committee {
     public void setDemoday(Demoday demoday) {
         this.demoday = demoday;
     }
- 
-     
 
 }
  

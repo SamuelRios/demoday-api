@@ -4,8 +4,10 @@ import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
+import com.demodayapi.models.Committee;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.User;
+import com.demodayapi.services.CommitteeService;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +36,10 @@ public class DemodayController {
     @Autowired
     UserService userService;
 
+
+    @Autowired
+    CommitteeService committeeService;
+
     @GetMapping("/")
     public String hello() {
         return "demoday-api is online";
@@ -57,6 +63,12 @@ public class DemodayController {
                         throw new ValidateBiggestBetweenInitEndException();
                         if(this.demodayService.verifyAccEvalCriteriaAndNameExists(newDemoday)) throw new AccEvalCriteriaNameCanNotBeNullException();
                     Demoday savedDemoday = demodayService.saveDemoday(newDemoday);
+                     
+                    demodayInProgress = demodayService.getDemodayInProgress();
+                    Committee committee = new Committee();
+                    committee.setDemoday(demodayInProgress.get(0));
+                    committeeService.saveCommittee(committee);
+
                     return new ResponseEntity<>(savedDemoday, HttpStatus.CREATED);
                 }
                 throw new AreadyExistInProgressDemodayException();

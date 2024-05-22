@@ -15,6 +15,7 @@ public class DemodayService {
 
     @Autowired
     private DemodayRepository demodayRepository;
+ 
 
     public Demoday saveDemoday(Demoday newDemoday) {
         if (newDemoday != null) {
@@ -168,7 +169,6 @@ public class DemodayService {
     public void deleteDemodayById(int id) {
         Demoday demoday = demodayRepository.findById(id);
         if (demoday != null) {
-             
             demodayRepository.delete(demoday);
         }
     }

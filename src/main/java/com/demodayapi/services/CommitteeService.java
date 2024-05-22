@@ -5,29 +5,32 @@ import com.demodayapi.models.Committee;
 import com.demodayapi.repositories.CommitteeRepository;
 
 import jakarta.transaction.Transactional;
- 
-
 
 
 @Service
 public class CommitteeService {
     @Autowired
-  private CommitteeRepository committeeDemodayRepository;
+  private CommitteeRepository committeeRepository;
 
-            public Committee saveDemoday(Committee newCommittee) {
-            Committee saveCommittee = this.committeeDemodayRepository.save(newCommittee);
-            return this.committeeDemodayRepository.save(saveCommittee);
+            public Committee saveCommittee(Committee newCommittee) {
+            Committee saveCommittee = this.committeeRepository.save(newCommittee);
+            return this.committeeRepository.save(saveCommittee);
             }
 
 
 @Transactional
     public void deleteCommitteeById(int id) {
-    Committee project = committeeDemodayRepository.findById(id).orElse(null);
+    Committee project = committeeRepository.findById(id).orElse(null);
     if (project != null) {   // Excluir os e-mails associados ao projeto
-        project.setDemoday(null); 
-        committeeDemodayRepository.delete(project);
+         
+        committeeRepository.delete(project);
     }
 }
+
+
+public Committee activeCommittee() {
+    return committeeRepository.getActiveCommittee();
+    }
 
 }
  
