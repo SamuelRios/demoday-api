@@ -43,6 +43,13 @@ public class DemodayController {
         List<Demoday> demodays = demodayService.findAll();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
+    
+    @GetMapping("/getalldemodays")
+    public ResponseEntity<List<Demoday>> getAllDemodays() throws IOException, MethodArgumentNotValidException {
+        List<Demoday> demodays = demodayService.getAllDemodays();
+        return new ResponseEntity<>(demodays, HttpStatus.OK);
+    }
+
 
     @PostMapping("/newDemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
@@ -86,5 +93,4 @@ public class DemodayController {
         demodayService.deleteDemodayById(id); 
         return ResponseEntity.noContent().build();
     }
-
 }

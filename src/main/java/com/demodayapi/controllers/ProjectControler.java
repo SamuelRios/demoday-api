@@ -6,7 +6,6 @@ import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
-import com.demodayapi.repositories.ProjectRepository;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.ProjectService;
 import com.demodayapi.services.UserService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +38,7 @@ public class ProjectControler {
     @Autowired
     UserService userService;
 
-    @PostMapping("/newproject")
+    @PostMapping("/submitproject")
     public ResponseEntity<Project> postProject(@RequestBody Project newProject, HttpServletRequest request) {
         try {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
