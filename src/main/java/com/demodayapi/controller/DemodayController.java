@@ -6,7 +6,6 @@ import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Committee;
 import com.demodayapi.models.Demoday;
-import com.demodayapi.models.User;
 import com.demodayapi.services.CommitteeService;
 import com.demodayapi.services.CommitteeUserService;
 import com.demodayapi.services.DemodayService;

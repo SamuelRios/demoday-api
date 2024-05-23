@@ -3,7 +3,6 @@ import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
-import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
