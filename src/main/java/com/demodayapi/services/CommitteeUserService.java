@@ -2,12 +2,7 @@ package com.demodayapi.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.demodayapi.models.Committee;
 import com.demodayapi.models.CommitteeUser;
-import com.demodayapi.models.Demoday;
-import com.demodayapi.models.User;
-import com.demodayapi.repositories.CommitteeRepository;
 import com.demodayapi.repositories.CommitteeUserRepository;
 
 import jakarta.transaction.Transactional;
@@ -43,14 +38,6 @@ public class CommitteeUserService {
       public void deleteById(String Id) {
         committeeUserRepository.deleteByIdUser(Id);
        }
- 
-
-    // @Transactional
-    // public void deleteCommitteeUsersById(int idCommitee) {
-   
-    //     committeeUserRepository.deleteAllCommitteeUsers(idCommitee);
-    // }
-  
 
 
 }
