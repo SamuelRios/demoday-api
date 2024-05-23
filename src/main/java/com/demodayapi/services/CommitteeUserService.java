@@ -40,11 +40,10 @@ public class CommitteeUserService {
        committeeUserRepository.deleteAllCommitteeUsers(demodayId);
       }
 
-      // public void deleteById(String Id) {
-      //   committeeUserRepository.deleteByIdUser(Id);
-      //  }
+      public void deleteById(String Id) {
+        committeeUserRepository.deleteByIdUser(Id);
+       }
  
-
 
     // @Transactional
     // public void deleteCommitteeUsersById(int idCommitee) {

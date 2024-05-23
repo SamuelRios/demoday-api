@@ -22,7 +22,7 @@ public class Committee {
     private int id;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name = "demoday")
     private Demoday demoday;
 

@@ -22,13 +22,13 @@ public class CommitteeUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "committee_id")
     private Committee committee;
 
     
 
-    @ManyToOne(/*cascade = CascadeType.ALL*/)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user ;
 

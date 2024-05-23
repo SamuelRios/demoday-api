@@ -13,18 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
-
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.CommitteeUser;
 import com.demodayapi.models.Demoday;
-import com.demodayapi.models.User;
 import com.demodayapi.services.CommitteeService;
 import com.demodayapi.services.CommitteeUserService;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
@@ -82,38 +79,44 @@ public class CommitteeUserControler {
 
     }
 
-    @DeleteMapping("/deletealluserscommittee")
-        public ResponseEntity<Void> deleteCommittee(HttpServletRequest request) {
-        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
-        
-        Demoday demoday=demodayService.getDemodayInProgress().get(0);
-        if (demoday==null) throw new TherIsNotActiveDemodayException();
-        committeeUserService.deleteAllCommitteeUsers(demoday.getId()); 
-        return ResponseEntity.noContent().build();
-         
-    }
-
-   @GetMapping("/getcommitteeusers")
-    public ResponseEntity<List<CommitteeUser>> getActiveDemoday() throws IOException, MethodArgumentNotValidException {
+    @GetMapping("/getcommitteeusers")
+    public ResponseEntity<List<CommitteeUser>> getActiveUsersCommittee() throws IOException, MethodArgumentNotValidException {
         Demoday demoday = demodayService.getDemodayInProgress().get(0);
-        if (demoday == null) throw new TherIsNotActiveDemodayException();
+        if (demoday == null)
+            throw new TherIsNotActiveDemodayException();
         List<CommitteeUser> listUserCommittee = committeeUserService.allUsersActiveCommittee(demoday.getId());
         return new ResponseEntity<>(listUserCommittee, HttpStatus.OK);
     }
 
+    @GetMapping("/getcommitteeusersbyid/{id}")
+    public ResponseEntity<List<CommitteeUser>> getActiveUsersById(@PathVariable int id) throws IOException, MethodArgumentNotValidException {
+         
+        List<CommitteeUser> listUserCommittee = committeeUserService.allUsersActiveCommittee(id);
+        return new ResponseEntity<>(listUserCommittee, HttpStatus.OK);
+    }
 
 
-//     @DeleteMapping("/deleteusercommittee/{id}")
-//     public ResponseEntity<Void> deleteCommitteeById(@PathVariable String id,HttpServletRequest request) {
-//     if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
-    
-//     Demoday demoday=demodayService.getDemodayInProgress().get(0);
-//     if (demoday==null) throw new TherIsNotActiveDemodayException();
-//     committeeUserService.deleteById(id); 
-//     return ResponseEntity.noContent().build();
-     
-// }
+    @DeleteMapping("/deletealluserscommittee")
+    public ResponseEntity<Void> deleteCommittee(HttpServletRequest request) {
+        if (!userService.isLoggedUserAdmin(request))
+            throw new UserIsNotAdminException();
 
-   
+        List <Demoday> demoday = demodayService.getDemodayInProgress();
+        if (demoday == null)throw new TherIsNotActiveDemodayException();
+        committeeUserService.deleteAllCommitteeUsers(demoday.get(0).getId());
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @DeleteMapping("/deleteusercommittee/{id}")
+    public ResponseEntity<Void> deleteCommitteeById(@PathVariable String id, HttpServletRequest request) {
+        if (!userService.isLoggedUserAdmin(request))
+            throw new UserIsNotAdminException();
+        List <Demoday> demoday = demodayService.getDemodayInProgress();
+        if (demoday == null)throw new TherIsNotActiveDemodayException();
+        committeeUserService.deleteById(id);
+        return ResponseEntity.noContent().build();
+
+    }
 
 }

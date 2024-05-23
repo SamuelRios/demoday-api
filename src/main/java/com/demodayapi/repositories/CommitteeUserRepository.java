@@ -31,5 +31,7 @@ public interface CommitteeUserRepository extends CrudRepository<CommitteeUser, I
   @Modifying
   @Transactional
   @Query("DELETE FROM CommitteeUser u WHERE u.user.id = :id")
-  void deleteByIdUser(@Param("id") User id);
+  void deleteByIdUser(@Param("id") String id);
+
+
 }
