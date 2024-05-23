@@ -1,6 +1,8 @@
 package com.demodayapi.repositories;
 import java.util.List;
 
+import com.demodayapi.enums.ProjectStatusEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,8 +22,8 @@ public interface ProjectRepository extends CrudRepository<Project, Integer>{
 
     @Query("SELECT p FROM Project p WHERE p.demoday.id = (SELECT MAX(d.id) FROM Demoday d) ")
      List<Project> listProjectsOfMostRecentDemoday();
-    
- 
+
+    List<Project> findByStatus(ProjectStatusEnum status);
 
  
 }
