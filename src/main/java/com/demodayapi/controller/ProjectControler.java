@@ -1,5 +1,6 @@
 package com.demodayapi.controller;
 import com.demodayapi.enums.DemodayStatusEnum;
+import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.models.Demoday;
@@ -16,11 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -62,10 +59,14 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @GetMapping("/getdemodayprojects")
-    public ResponseEntity<List<Project>> findSubmitted(){
-        List<Project> projectSubmitted = projectService.findSubmitted();
-        return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
+    @GetMapping("/getdemodayprojects/{demoday_id}")
+    public ResponseEntity<List<Project>> getProjectsByDemodayId(@PathVariable int demoday_id) {
+        List<Project> projects = projectService.findByDemodayId(demoday_id);
+        if (!projects.isEmpty()) {
+            return new ResponseEntity<>(projects, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/getdemodayacceptedprojects")
@@ -74,5 +75,17 @@ public class ProjectControler {
         return new ResponseEntity<>(projectAccepted, HttpStatus.OK);
     }
 
-
+    @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
+    public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
+        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEITO);
+        if (!projects.isEmpty()) {
+            return new ResponseEntity<>(projects, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
+
+
+

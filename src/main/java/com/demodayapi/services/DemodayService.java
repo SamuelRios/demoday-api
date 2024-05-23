@@ -160,5 +160,10 @@ public class DemodayService {
         return DemodayStatusEnum.FINISHEDPHASE;
     }
 
+    public Demoday findById(int id) {
+        return demodayRepository.findById(id);
+    }
+
+
 
 }

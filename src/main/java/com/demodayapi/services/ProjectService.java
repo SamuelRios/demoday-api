@@ -60,6 +60,18 @@ public class ProjectService {
     return projectRepository.findByStatus(ProjectStatusEnum.ACEITO);
   }
 
+  public Project findById(int id) {
+    return this.projectRepository.findById(id).orElse(null);
+  }
+
+  public List<Project> findByDemodayId(int demodayId) {
+    return this.projectRepository.findByDemodayId(demodayId);
+  }
+
+  public List<Project> findByDemodayIdAndStatus(int demodayId, ProjectStatusEnum status) {
+    return this.projectRepository.findByDemodayIdAndStatus(demodayId, status);
+  }
+
 }
 
 
