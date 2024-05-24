@@ -44,6 +44,8 @@ public class CommitteeUserControler {
         try {
 
             CommitteeUser CommitteeUser = new CommitteeUser();
+            List<Demoday> demodayInProgress= demodayService.getDemodayInProgress();
+            if (demodayInProgress==null) throw new TherIsNotActiveDemodayException();
             Demoday demoday = demodayService.getDemodayInProgress().get(0);
             // checa se existe demoday
             System.out.println(demoday.getId());
