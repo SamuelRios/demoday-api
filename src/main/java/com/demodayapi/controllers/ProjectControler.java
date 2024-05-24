@@ -1,5 +1,6 @@
 package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
+import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -98,16 +99,24 @@ public class ProjectControler {
         }
     }
 
-    @GetMapping("/getdemodayprojects")
-    public ResponseEntity<List<Project>> findSubmitted(){
-        List<Project> projectSubmitted = projectService.findSubmitted();
-        return new ResponseEntity<>(projectSubmitted, HttpStatus.OK);
+    @GetMapping("/getdemodayprojects/{demoday_id}")
+    public ResponseEntity<List<Project>> getProjectsByDemodayId(@PathVariable int demoday_id) {
+        List<Project> projects = projectService.findByDemodayId(demoday_id);
+        if (!projects.isEmpty()) {
+            return new ResponseEntity<>(projects, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/getdemodayacceptedprojects")
-    public ResponseEntity<List<Project>> findAccepted(){
-        List<Project> projectAccepted = projectService.findAccepted();
-        return new ResponseEntity<>(projectAccepted, HttpStatus.OK);
+    @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
+    public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
+        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEITO);
+        if (!projects.isEmpty()) {
+            return new ResponseEntity<>(projects, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
      @DeleteMapping("/deleteprojects/{id}")

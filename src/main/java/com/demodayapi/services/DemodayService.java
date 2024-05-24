@@ -180,4 +180,8 @@ public class DemodayService {
         }
     }
 
+    public Demoday findById(int id) {
+        return demodayRepository.findById(id);
+    }
+
 }

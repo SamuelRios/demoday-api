@@ -93,6 +93,16 @@ public void deleteProjectById(int id) {
         projectRepository.delete(project);
     }
 }
+
+    public List<Project> findByDemodayId(int demodayId) {
+        return this.projectRepository.findByDemodayId(demodayId);
+    }
+
+    public List<Project> findByDemodayIdAndStatus(int demodayId, ProjectStatusEnum status) {
+        return this.projectRepository.findByDemodayIdAndStatus(demodayId, status);
+    }
+
+
 }
 
 

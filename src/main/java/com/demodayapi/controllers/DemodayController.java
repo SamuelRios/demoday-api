@@ -37,12 +37,6 @@ public class DemodayController {
     public String hello() {
         return "demoday-api is online";
     }
-
-    @GetMapping("/getdemodayinfo")
-    public ResponseEntity<List<Demoday>> getDemodays() throws IOException, MethodArgumentNotValidException {
-        List<Demoday> demodays = demodayService.findAll();
-        return new ResponseEntity<>(demodays, HttpStatus.OK);
-    }
     
     @GetMapping("/getalldemodays")
     public ResponseEntity<List<Demoday>> getAllDemodays() throws IOException, MethodArgumentNotValidException {
@@ -93,4 +87,15 @@ public class DemodayController {
         demodayService.deleteDemodayById(id); 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/getdemodayinfo/{demoday_id}")
+    public ResponseEntity<Demoday> getDemodayById(@PathVariable int demoday_id) {
+        Demoday demoday = demodayService.findById(demoday_id);
+        if (demoday != null) {
+            return new ResponseEntity<>(demoday, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
