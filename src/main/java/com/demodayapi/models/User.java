@@ -1,7 +1,6 @@
 package com.demodayapi.models;
 import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,6 +45,8 @@ public class User {
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     private UserStatusEnum status;
+
+    
 
     @Transient()
     private String password;
