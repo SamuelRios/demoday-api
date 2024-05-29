@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;

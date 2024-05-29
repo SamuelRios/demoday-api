@@ -1,4 +1,4 @@
-package com.demodayapi.controller;
+package com.demodayapi.controllers;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
