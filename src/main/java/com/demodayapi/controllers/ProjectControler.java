@@ -109,7 +109,7 @@ public class ProjectControler {
     @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
         
-        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEITO); 
+        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEPTED); 
         return new ResponseEntity<>(projects, HttpStatus.OK);
 
     }
@@ -119,6 +119,15 @@ public class ProjectControler {
         if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
         projectService.deleteProjectById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/pendingprojects")
+    public ResponseEntity<List<Project>> getPendingUsers(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
+        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+        List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED); 
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+
+    
     }
 
 }

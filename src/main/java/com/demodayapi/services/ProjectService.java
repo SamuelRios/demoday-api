@@ -2,6 +2,8 @@ package com.demodayapi.services;
 import java.util.List;
 
 import com.demodayapi.enums.ProjectStatusEnum;
+import com.demodayapi.enums.UserTypeEnum;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demodayapi.models.Project;
@@ -22,7 +24,7 @@ public class ProjectService {
   private UserService userService;
 
   public Project saveProject(Project newProject) {
-    newProject.setStatus("SUBMETIDO");
+    newProject.setStatus("SUBMITTED");
     return this.projectRepository.save(newProject);
   }
 
@@ -36,6 +38,10 @@ public class ProjectService {
 
   public List<Project> projectsOfMostRecentDemoday() {
     return this.projectRepository.listProjectsOfMostRecentDemoday();
+  }
+
+  public List <Project> listOfPenddingProjects(ProjectStatusEnum status){
+     return this.projectRepository.listProjectsStatusIsSubmitted(status);
   }
 
   public Project updateProject(Project existingProject, Project projectDetails) {
@@ -65,8 +71,6 @@ public class ProjectService {
 
   public boolean verifyIfUserHasProjectCreated(HttpServletRequest request){
     List <Project> projectList = this.projectsOfMostRecentDemoday();
-    
-     
     User user = userService.getLoggedUser(request);
     System.out.println(user.getId());
     for (Project project : projectList) {
@@ -79,10 +83,10 @@ public class ProjectService {
 }
 
   public List<Project> findSubmitted(){
-    return projectRepository.findByStatus(ProjectStatusEnum.SUBMETIDO);
+    return projectRepository.findByStatus(ProjectStatusEnum.SUBMITTED);
   }
   public List<Project> findAccepted(){
-    return projectRepository.findByStatus(ProjectStatusEnum.ACEITO);
+    return projectRepository.findByStatus(ProjectStatusEnum.ACEPTED);
   }
 @Transactional
 public void deleteProjectById(int id) {
