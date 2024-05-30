@@ -101,6 +101,7 @@ public class ProjectControler {
 
     @GetMapping("/getdemodayprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getProjectsByDemodayId(@PathVariable int demoday_id) {
+        System.out.println(demoday_id);
         List<Project> projects = projectService.findByDemodayId(demoday_id);
             return new ResponseEntity<>(projects, HttpStatus.OK);
     }

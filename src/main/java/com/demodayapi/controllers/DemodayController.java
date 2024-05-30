@@ -54,7 +54,7 @@ public class DemodayController {
     }
 
 
-    @PostMapping("/newDemoday")
+    @PostMapping("/newdemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
         try {
             System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 1");
