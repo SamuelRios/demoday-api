@@ -1,9 +1,6 @@
 package com.demodayapi.services;
 import java.util.List;
-
 import com.demodayapi.enums.ProjectStatusEnum;
-import com.demodayapi.enums.UserTypeEnum;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demodayapi.models.Project;
@@ -11,7 +8,6 @@ import com.demodayapi.models.User;
 import com.demodayapi.repositories.ProjectRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Null;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -75,7 +71,8 @@ public class ProjectService {
     System.out.println(user.getId());
     for (Project project : projectList) {
       if (project.getUser().getId().equals(user.getId())) {
-          System.out.println("ENTROU AQUI");
+
+          System.out.println("ENTROU AQUI************************");
           return true; // Se encontrar um projeto associado ao usuário retorna true
       }
   }

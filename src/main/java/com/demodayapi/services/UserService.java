@@ -1,11 +1,8 @@
 package com.demodayapi.services;
-
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -15,10 +12,7 @@ import com.demodayapi.exceptions.UserPedingException;
 import com.demodayapi.exceptions.UserRejectedException;
 import com.demodayapi.models.User;
 import com.demodayapi.repositories.UserRepository;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
