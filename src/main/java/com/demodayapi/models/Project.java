@@ -40,7 +40,7 @@ public class Project {
     @NotBlank(message = "O link do vídeo é obrigatório.")
     private String linkvideo;
 
-    @Column(nullable=false, length = 255)
+    @Column(nullable=true, length = 255)
     @Size(min = 3, max = 255, message = "a disciplina deve conter no mínimo 3 caracteres.")
     @NotBlank(message = "O link do vídeo é obrigatório.")
     private String discipline;

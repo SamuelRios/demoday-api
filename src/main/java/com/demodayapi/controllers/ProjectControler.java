@@ -101,22 +101,17 @@ public class ProjectControler {
 
     @GetMapping("/getdemodayprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getProjectsByDemodayId(@PathVariable int demoday_id) {
+        System.out.println(demoday_id);
         List<Project> projects = projectService.findByDemodayId(demoday_id);
-        if (!projects.isEmpty()) {
             return new ResponseEntity<>(projects, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
-        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEITO);
-        if (!projects.isEmpty()) {
-            return new ResponseEntity<>(projects, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        
+        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEITO); 
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+
     }
 
      @DeleteMapping("/deleteprojects/{id}")
