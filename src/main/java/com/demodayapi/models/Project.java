@@ -3,8 +3,6 @@ import java.time.Year;
 import java.util.List;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
-import com.demodayapi.enums.UserTypeEnum;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;

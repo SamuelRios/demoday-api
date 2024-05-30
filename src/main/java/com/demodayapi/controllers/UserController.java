@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -99,6 +101,16 @@ public class UserController {
        }
        throw new UserIsNotAdminException();
     }
+
+
+    @PostMapping("/finduserbytype/{type}")
+     public ResponseEntity <List <User>> findUserBytype(@PathVariable UserTypeEnum type, HttpServletRequest request) {
+        System.out.println("AQUI*********************************************");
+        if (!userService.isLoggedUserAdmin(request)) throw new UserIsNotAdminException();
+        List <User> usersByType =userService.listOfTypeUser(type);
+        System.out.println(usersByType);
+        return new ResponseEntity<>(usersByType, HttpStatus.OK);
     
 
+}
 }

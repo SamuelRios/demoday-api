@@ -1,6 +1,5 @@
 package com.demodayapi.services;
 import java.util.List;
-
 import com.demodayapi.enums.ProjectStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,6 @@ import com.demodayapi.models.User;
 import com.demodayapi.repositories.ProjectRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Null;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -22,7 +20,7 @@ public class ProjectService {
   private UserService userService;
 
   public Project saveProject(Project newProject) {
-    newProject.setStatus("SUBMETIDO");
+    newProject.setStatus("SUBMITTED");
     return this.projectRepository.save(newProject);
   }
 
@@ -36,6 +34,10 @@ public class ProjectService {
 
   public List<Project> projectsOfMostRecentDemoday() {
     return this.projectRepository.listProjectsOfMostRecentDemoday();
+  }
+
+  public List <Project> listOfPenddingProjects(ProjectStatusEnum status){
+     return this.projectRepository.listProjectsStatusIsSubmitted(status);
   }
 
   public Project updateProject(Project existingProject, Project projectDetails) {
@@ -65,13 +67,12 @@ public class ProjectService {
 
   public boolean verifyIfUserHasProjectCreated(HttpServletRequest request){
     List <Project> projectList = this.projectsOfMostRecentDemoday();
-    
-     
     User user = userService.getLoggedUser(request);
     System.out.println(user.getId());
     for (Project project : projectList) {
       if (project.getUser().getId().equals(user.getId())) {
-          System.out.println("ENTROU AQUI");
+
+          System.out.println("ENTROU AQUI************************");
           return true; // Se encontrar um projeto associado ao usuário retorna true
       }
   }
@@ -79,10 +80,10 @@ public class ProjectService {
 }
 
   public List<Project> findSubmitted(){
-    return projectRepository.findByStatus(ProjectStatusEnum.SUBMETIDO);
+    return projectRepository.findByStatus(ProjectStatusEnum.SUBMITTED);
   }
   public List<Project> findAccepted(){
-    return projectRepository.findByStatus(ProjectStatusEnum.ACEITO);
+    return projectRepository.findByStatus(ProjectStatusEnum.ACEPTED);
   }
 @Transactional
 public void deleteProjectById(int id) {

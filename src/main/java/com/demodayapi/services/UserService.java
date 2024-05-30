@@ -1,11 +1,8 @@
 package com.demodayapi.services;
-
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.demodayapi.enums.UserStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -15,8 +12,6 @@ import com.demodayapi.exceptions.UserPedingException;
 import com.demodayapi.exceptions.UserRejectedException;
 import com.demodayapi.models.User;
 import com.demodayapi.repositories.UserRepository;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -74,12 +69,21 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    public List<User> findUserByType(UserTypeEnum user ){
+        return this.userRepository.findByType(user);
+    }
+
     public List<User> findAllPending(){
         return this.userRepository.findByStatus(UserStatusEnum.PENDING);
     }
     public List<User> findAllProfessor(){
         return this.userRepository.findByType(UserTypeEnum.PROFESSOR);
     }
+
+    public List <User> listOfTypeUser(UserTypeEnum type){
+     return this.userRepository.listOfTypeUser(type);
+    }
+    
     
     public User getLoggedUser(HttpServletRequest request){
         try{

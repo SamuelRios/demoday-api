@@ -94,12 +94,14 @@ public class DemodayController {
     }
 
 
-     @DeleteMapping("/deletedemoday/{id}")
-        public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
-        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
-        demodayService.deleteDemodayById(id); 
-        return ResponseEntity.noContent().build();
-    }
+    
+    @DeleteMapping("/deletedemoday/{id}")
+    public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
+    if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+    committeeUserService.deleteAllCommitteeUsers(id); 
+    demodayService.deleteDemodayById(id); 
+    return ResponseEntity.noContent().build();
+}
 
     @GetMapping("/getdemodayinfo/{demoday_id}")
     public ResponseEntity<Demoday> getDemodayById(@PathVariable int demoday_id) {
