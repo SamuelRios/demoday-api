@@ -18,6 +18,7 @@ import com.demodayapi.repositories.UserRepository;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
@@ -74,12 +75,21 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    public List<User> findUserByType(UserTypeEnum user ){
+        return this.userRepository.findByType(user);
+    }
+
     public List<User> findAllPending(){
         return this.userRepository.findByStatus(UserStatusEnum.PENDING);
     }
     public List<User> findAllProfessor(){
         return this.userRepository.findByType(UserTypeEnum.PROFESSOR);
     }
+
+    public List <User> listOfTypeUser(UserTypeEnum type){
+     return this.userRepository.listOfTypeUser(type);
+    }
+    
     
     public User getLoggedUser(HttpServletRequest request){
         try{
