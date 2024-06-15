@@ -1,6 +1,7 @@
 package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.enums.ProjectStatusEnum;
+import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -123,7 +124,9 @@ public class ProjectControler {
 
     @GetMapping("/pendingprojects")
     public ResponseEntity<List<Project>> getPendingUsers(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
-        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+        User user = userService.getLoggedUser(request);
+        UserTypeEnum userType= user.getType();
+        if(userType==UserTypeEnum.STUDENT)throw new UserIsNotAdminException();
         List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED); 
         return new ResponseEntity<>(projects, HttpStatus.OK);
 
