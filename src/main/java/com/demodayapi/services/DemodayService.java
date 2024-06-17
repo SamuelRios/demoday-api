@@ -54,7 +54,7 @@ public class DemodayService {
         return false;
     }// precisa desse metodo?
 
-    public boolean ValidateBiggestInitEndDate(Demoday demoday) {
+    public boolean validateBiggestInitEndDate(Demoday demoday) {
         LocalDate today = LocalDate.now();
         System.out.println(today);
         System.out.println(demoday.getPhaseOneInit());
@@ -148,7 +148,7 @@ public class DemodayService {
         return null;
     }
 
-    public List<Demoday> getAllDemodays(){
+    public List<Demoday> getAllDemodays() {
         return this.demodayRepository.findAll();
     }
 
@@ -173,7 +173,7 @@ public class DemodayService {
     public void deleteDemodayById(int id) {
         Demoday demoday = demodayRepository.findById(id);
         if (demoday != null) {
-             
+
             demodayRepository.delete(demoday);
         }
     }

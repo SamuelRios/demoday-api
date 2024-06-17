@@ -1,4 +1,5 @@
 package com.demodayapi.controllers;
+
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
@@ -36,7 +37,7 @@ public class DemodayController {
     @Autowired
     UserService userService;
 
-     @Autowired
+    @Autowired
     CommitteeService committeeService;
 
     @Autowired
@@ -46,28 +47,28 @@ public class DemodayController {
     public String hello() {
         return "demoday-api is online";
     }
-    
+
     @GetMapping("/getalldemodays")
     public ResponseEntity<List<Demoday>> getAllDemodays() throws IOException, MethodArgumentNotValidException {
         List<Demoday> demodays = demodayService.getAllDemodays();
         return new ResponseEntity<>(demodays, HttpStatus.OK);
     }
 
-
     @PostMapping("/newdemoday")
     public ResponseEntity<Demoday> postDemoday(@RequestBody Demoday newDemoday, HttpServletRequest request) {
         try {
             System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 1");
-            List<Demoday> demodayInProgress= demodayService.getDemodayInProgress();
+            List<Demoday> demodayInProgress = demodayService.getDemodayInProgress();
 
             if (this.userService.isLoggedUserAdmin(request)) {
                 System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 2");
                 if ((demodayInProgress == null)) {
                     System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 3");
-                    if (demodayService.ValidateBiggestInitEndDate(newDemoday))
+                    if (demodayService.validateBiggestInitEndDate(newDemoday))
                         throw new ValidateBiggestBetweenInitEndException();
-                        System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 4");
-                        if(this.demodayService.verifyAccEvalCriteriaAndNameExists(newDemoday)) throw new AccEvalCriteriaNameCanNotBeNullException();
+                    System.out.println("ola ola ola hiiiiiiiiiiii : : :: ) ) ) ) aqui 4");
+                    if (this.demodayService.verifyAccEvalCriteriaAndNameExists(newDemoday))
+                        throw new AccEvalCriteriaNameCanNotBeNullException();
                     Demoday savedDemoday = demodayService.saveDemoday(newDemoday);
                     demodayInProgress = demodayService.getDemodayInProgress();
                     Committee committee = new Committee();
@@ -93,15 +94,53 @@ public class DemodayController {
         return new ResponseEntity<>(demoday, HttpStatus.OK);
     }
 
-
-    
     @DeleteMapping("/deletedemoday/{id}")
-    public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
-    if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
-    committeeUserService.deleteAllCommitteeUsers(id); 
-    demodayService.deleteDemodayById(id); 
-    return ResponseEntity.noContent().build();
-}
+    public ResponseEntity<Void> deleteDemoday(@PathVariable int id, HttpServletRequest request) {
+        if (!userService.isLoggedUserAdmin(request))
+            throw new UserIsNotAdminException();
+        committeeUserService.deleteAllCommitteeUsers(id);
+        demodayService.deleteDemodayById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/editdemoday/{id}")
+    public ResponseEntity<Demoday> editDemoday(@PathVariable int id, @RequestBody Demoday demoday,
+            HttpServletRequest request) {
+                // Identificação do usuário;
+                // Usuário logado?
+                // Usuário logado é ADMIN?
+                // checagem das datas;
+                // exclusão de critérios;
+                // registro dos novos critérios (aceitação e avaliação);
+                // editar critérios;
+                // sobrescrever outros dados
+                // Obs: ver com o front como essa edição, remoção e registro de novos critérios fica melhor: envio de array de remoção (contendo os id's), array com os campos editados junto com o id de cada critério e array com novos critério a serem registrados;
+                
+        if (!userService.isLoggedUserAdmin(request)) {
+            throw new UserIsNotAdminException();
+        }
+
+        Demoday existingDemoday = demodayService.findById(id);
+
+        if (existingDemoday == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Update editable fields of existingDemoday with new values from demoday object
+        existingDemoday.setName(demoday.getName()); // Update name if needed
+        existingDemoday.setDescription(demoday.getDescription()); // Update description if needed
+        // ... Update other editable fields as necessary
+
+        if (demodayService.validateBiggestInitEndDate(demoday)) {
+            throw new ValidateBiggestBetweenInitEndException();
+        }
+        if (this.demodayService.verifyAccEvalCriteriaAndNameExists(demoday)) {
+            throw new AccEvalCriteriaNameCanNotBeNullException();
+        }
+
+        Demoday savedDemoday = demodayService.saveDemoday(existingDemoday);
+        return new ResponseEntity<>(savedDemoday, HttpStatus.OK);
+    }
 
     @GetMapping("/getdemodayinfo/{demoday_id}")
     public ResponseEntity<Demoday> getDemodayById(@PathVariable int demoday_id) {
