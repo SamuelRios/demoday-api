@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +112,7 @@ public class ProjectControler {
     @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
         
-        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACEPTED); 
+        List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACCEPTED);
         return new ResponseEntity<>(projects, HttpStatus.OK);
 
     }
@@ -129,9 +131,49 @@ public class ProjectControler {
         if(userType==UserTypeEnum.STUDENT)throw new UserIsNotAdminException();
         List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED); 
         return new ResponseEntity<>(projects, HttpStatus.OK);
-
-    
     }
+
+    @PostMapping("/approveproject/{id}")
+    public ResponseEntity<?> approveProject(@PathVariable int id, HttpServletRequest request) {
+        try {
+            User user = userService.getLoggedUser(request);
+            if (user.getType() != UserTypeEnum.ADMIN) {
+                throw new UserIsNotAdminException();
+            }
+            Project project = projectService.findById(id);
+            if (project == null) {
+                return new ResponseEntity<>("Project not found", HttpStatus.NOT_FOUND);
+            }
+            projectService.approveProject(project);
+            return new ResponseEntity<>("Project approved successfully", HttpStatus.OK);
+        } catch (UserIsNotAdminException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/rejectproject/{id}")
+    public ResponseEntity<?> rejectProject(@PathVariable int id, @RequestBody Map<String, String> requestBody, HttpServletRequest request) {
+        try {
+            User user = userService.getLoggedUser(request);
+            if (user.getType() != UserTypeEnum.ADMIN) {
+                throw new UserIsNotAdminException();
+            }
+            Project project = projectService.findById(id);
+            if (project == null) {
+                return new ResponseEntity<>("Project not found", HttpStatus.NOT_FOUND);
+            }
+            String rejectionReason = requestBody.get("rejectionReason");
+            projectService.rejectProject(project, rejectionReason);
+            return new ResponseEntity<>("Project rejected successfully", HttpStatus.OK);
+        } catch (UserIsNotAdminException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
 

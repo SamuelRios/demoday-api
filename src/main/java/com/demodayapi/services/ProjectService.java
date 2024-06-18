@@ -83,7 +83,7 @@ public class ProjectService {
     return projectRepository.findByStatus(ProjectStatusEnum.SUBMITTED);
   }
   public List<Project> findAccepted(){
-    return projectRepository.findByStatus(ProjectStatusEnum.ACEPTED);
+    return projectRepository.findByStatus(ProjectStatusEnum.ACCEPTED);
   }
 @Transactional
 public void deleteProjectById(int id) {
@@ -103,7 +103,17 @@ public void deleteProjectById(int id) {
         return this.projectRepository.findByDemodayIdAndStatus(demodayId, status);
     }
 
+    public void approveProject(Project project) {
+        project.setStatus(ProjectStatusEnum.ACCEPTED);
+        projectRepository.save(project);
+    }
 
+    @Transactional
+    public void rejectProject(Project project, String rejectionReason) {
+        project.setStatus(ProjectStatusEnum.REFUSED);
+        project.setRejectionReason(rejectionReason);
+        projectRepository.save(project);
+    }
 }
 
 

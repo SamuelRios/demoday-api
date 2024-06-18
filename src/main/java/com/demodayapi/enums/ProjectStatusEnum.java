@@ -3,5 +3,5 @@ package com.demodayapi.enums;
 public enum ProjectStatusEnum {
     SUBMITTED,
     REFUSED,
-    ACEPTED
+    ACCEPTED
    }

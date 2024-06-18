@@ -90,6 +90,9 @@ public class Project {
     @JoinColumn(name = "demoday_id")
     private Demoday demoday;
 
+    @Column(length = 500)
+    private String rejectionReason;
+
     
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -251,6 +254,14 @@ public class Project {
 
     public void setEmails(List<String> emails) {
         this.emails = emails;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }
 
