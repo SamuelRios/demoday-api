@@ -50,7 +50,6 @@ public class ProjectService {
         existingProject.setProfessor(projectDetails.getProfessor());
         existingProject.setYear(projectDetails.getYear());
         existingProject.setDescription(projectDetails.getDescription());
-        existingProject.setCategory(projectDetails.getCategory());
         existingProject.setTecnologies(projectDetails.getTecnologies());
         existingProject.setLinkdoc(projectDetails.getLinkdoc());
         existingProject.setStatus(projectDetails.getStatus().toString());

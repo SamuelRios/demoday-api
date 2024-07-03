@@ -48,7 +48,7 @@ public class Project {
     @NotBlank(message = "O nome do professor é obrigatório.")
     private String professor;
 
-    @Column(nullable=false, length = 4, columnDefinition = "YEAR")
+    @Column(nullable=true, length = 4, columnDefinition = "YEAR")
     private Year year;
 
     @Column(nullable=false, length = 500)
@@ -56,9 +56,6 @@ public class Project {
     @NotBlank(message = "A descrição é obrigatória.")
     private String description;
     
-    @Column(nullable=false)
-    @NotBlank(message = "A Categoriaé obrigatória.")
-    private String category;
 
     @Column(length = 255)
     @Size(min = 0, max = 255, message = "O campo tecnologies deve conter no mínimo 4 caracteres")
@@ -81,7 +78,6 @@ public class Project {
     @Column(name = "emails", nullable = true)
     private List<String> emails;
     
-   
 
     @Column(length = 500)
     private String image;
@@ -165,13 +161,7 @@ public class Project {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public String getTecnologies() {
         return tecnologies;
@@ -232,9 +222,7 @@ public class Project {
             this.type = ProjectTypeEnum.valueOf(type);
     }
 
-    public void setProjectType(String type) {
-        this.type = ProjectTypeEnum.valueOf(type);
-    }
+   
 
     public void setPeriod(Integer period) {
         this.period = period;
@@ -244,10 +232,7 @@ public class Project {
         this.status = status;
     }
 
-    public void setType(ProjectTypeEnum type) {
-        this.type = type;
-    }
-
+ 
     public List<String> getEmails() {
         return emails;
     }
