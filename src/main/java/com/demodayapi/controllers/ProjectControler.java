@@ -157,7 +157,7 @@ public class ProjectControler {
     public ResponseEntity<?> rejectProject(@PathVariable int id, @RequestBody Map<String, String> requestBody, HttpServletRequest request) {
         try {
             User user = userService.getLoggedUser(request);
-            if (user.getType() != UserTypeEnum.ADMIN) {
+            if (user.getType() == UserTypeEnum.STUDENT) {
                 throw new UserIsNotAdminException();
             }
             Project project = projectService.findById(id);
