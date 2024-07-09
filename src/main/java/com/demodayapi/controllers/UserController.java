@@ -110,7 +110,13 @@ public class UserController {
         List <User> usersByType =userService.listOfTypeUser(type);
         System.out.println(usersByType);
         return new ResponseEntity<>(usersByType, HttpStatus.OK);
-    
-
 }
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id, HttpServletRequest request) {
+        if(this.userService.isLoggedUserAdmin(request)){
+            User user = userService.getUserById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        throw new UserIsNotAdminException();
+    }
 }
