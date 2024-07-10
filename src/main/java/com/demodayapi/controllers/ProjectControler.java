@@ -125,7 +125,7 @@ public class ProjectControler {
     }
 
     @GetMapping("/pendingprojects")
-    public ResponseEntity<List<Project>> getPendingUsers(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
+    public ResponseEntity<List<Project>> getPendingProjects(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
         User user = userService.getLoggedUser(request);
         UserTypeEnum userType= user.getType();
         if(userType==UserTypeEnum.STUDENT)throw new UserIsNotAdminException();
