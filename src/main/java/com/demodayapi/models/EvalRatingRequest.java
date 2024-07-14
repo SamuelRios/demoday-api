@@ -4,24 +4,15 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class EvalRatingRequest {
-    @NotNull(message = "projectId é obrigatório")
-    private Integer projectId;
 
-    @NotNull(message = "evalCriteriaId é obrigatório")
+    @NotNull(message = "O ID do critério de avaliação é obrigatório.")
     private Integer evalCriteriaId;
 
 
     @Min(value = 1, message = "O valor deve ser no mínimo {value}.")
     @Max(value = 5, message = "O valor deve ser no máximo {value}.")
-    private int rate;
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
+    @NotNull(message = "A valor da avaliação é obrigatório.")
+    private Integer rate;
 
     public Integer getEvalCriteriaId() {
         return evalCriteriaId;
@@ -31,11 +22,11 @@ public class EvalRatingRequest {
         this.evalCriteriaId = evalCriteriaId;
     }
 
-    public int getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 }

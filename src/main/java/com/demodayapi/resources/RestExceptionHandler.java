@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
+import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
+import com.demodayapi.exceptions.UserHasAlreadyRatedProjectException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotFoundException;
 import com.demodayapi.exceptions.UserNotLoggedException;
@@ -34,8 +36,8 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException exception,
-            HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        System.out.println("aiiiiiiiii errrrrrrrrrrrrooooooooooooooooooooooooooo");
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
@@ -259,7 +261,7 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ThereIsNotPeriodOfEvaluationException.class)
-    public ResponseEntity<StandardError> ThereIsNotEvaluationPeriodException(
+    public ResponseEntity<StandardError> thereIsNotEvaluationPeriodException(
         ThereIsNotPeriodOfEvaluationException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
@@ -270,5 +272,35 @@ public class RestExceptionHandler {
         err.setMessage(exception.getMessage());
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserHasAlreadyRatedProjectException.class)
+    public ResponseEntity<StandardError> userHasAlreadyRatedProjectException(
+        UserHasAlreadyRatedProjectException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateEvaluationByCriteriaException.class)
+    public ResponseEntity<StandardError> duplicateEvaluationByCriteria(
+        DuplicateEvaluationByCriteriaException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 }

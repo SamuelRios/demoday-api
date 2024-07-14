@@ -2,9 +2,11 @@ package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
+import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
+import com.demodayapi.exceptions.UserHasAlreadyRatedProjectException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
 import com.demodayapi.models.EvalRating;
@@ -15,9 +17,11 @@ import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.EvalRatingService;
 import com.demodayapi.services.ProjectService;
 import com.demodayapi.services.UserService;
+import com.demodayapi.models.EvalRatingRequestList;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +30,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
+@Validated
 public class ProjectControler {
 
     @Autowired
@@ -185,23 +191,37 @@ public class ProjectControler {
     }
 
      @PostMapping("/evaluateproject")
-    public ResponseEntity<?> evaluateProject(@Valid @RequestBody EvalRatingRequest evalRatingRequest, HttpServletRequest request) {
+    public ResponseEntity<?> evaluateProject( @Valid @RequestBody EvalRatingRequestList evalRatingRequestList, HttpServletRequest request) {
         User loggedUser = this.userService.getLoggedUser(request);
 
-        DemodayStatusEnum demodayStatus = demodayService.getDemodayStatus();
+        DemodayStatusEnum demodayStatus  = demodayService.getDemodayStatus();
         if (demodayStatus != DemodayStatusEnum.PHASE3)
             throw new ThereIsNotPeriodOfEvaluationException();
+        System.out.println(demodayStatus);
 
-        EvalRating userEvalRate = this.evalRatingService.getUserEvalRateProject(loggedUser.getId(), evalRatingRequest.getProjectId(), evalRatingRequest.getEvalCriteriaId());
-        
-        if(userEvalRate == null){
-            this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequest);
-        } else{
-            System.out.println(userEvalRate.getId());
-            userEvalRate.setRate(evalRatingRequest.getRate());
-            this.evalRatingService.saveEvalRating(userEvalRate);
-        } 
+        if(this.evalRatingService.hasUserVotedProject(loggedUser.getId(), evalRatingRequestList.getProjectId())){
+            throw new UserHasAlreadyRatedProjectException();
+        }
 
+        System.out.println(demodayStatus);
+
+        List<EvalRatingRequest> evalRartingRequests = evalRatingRequestList.getEvalRatings();
+        System.out.println(demodayStatus);
+        for(EvalRatingRequest evalRatingRequest: evalRartingRequests){
+            try {
+                this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequestList.getProjectId(),  evalRatingRequest);
+            } catch (Exception e) {
+                this.evalRatingService.deleteEvalRatingsByUserAndProject(loggedUser.getId(),  evalRatingRequestList.getProjectId());
+                if(e.getMessage().contains("Duplicate entry")){
+                    throw new DuplicateEvaluationByCriteriaException("Avaliação duplicada para o critério com id " + Integer.toString(evalRatingRequest.getRate())  + ".");
+                } else {
+                    e.printStackTrace();
+                    return new ResponseEntity<>("Erro Interno.", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+           
+        }
+        System.out.println(demodayStatus);
         return new ResponseEntity<>("Avaliação salva.", HttpStatus.OK);
     }
 

@@ -8,12 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="eval_rating")
+@Table(name="eval_rating", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "project_id", "eval_criteria_id"})
+})
 public class EvalRating {
 
     @Id()
