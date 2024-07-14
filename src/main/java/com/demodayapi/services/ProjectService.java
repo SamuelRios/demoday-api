@@ -114,15 +114,3 @@ public void deleteProjectById(int id) {
         projectRepository.save(project);
     }
 }
-
-
-
-
-
-// public Project saveList(List <Project> criteriaList){
-// for (Project criteria : criteriaList) {
-// Project newCriteria = new Project();
-
-// }
-// return this.AccCriteriaRepository.saveAll(newCriteria);
-// }

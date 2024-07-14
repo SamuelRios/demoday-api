@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
+import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -48,6 +50,16 @@ public class RestExceptionHandler {
         err.setMessage("Argumentos Inválidos.");
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleBindExceptions(BindException ex) {
+        StringBuilder errorMessage = new StringBuilder();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errorMessage.append(error.getDefaultMessage()).append(". ");
+        }
+        return ResponseEntity.badRequest().body(errorMessage.toString());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -234,6 +246,21 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserRejectedException.class)
     public ResponseEntity<StandardError> userRejectedException(
         UserRejectedException exception, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        // errors.put("Date", "false");
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.UNAUTHORIZED.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ThereIsNotPeriodOfEvaluationException.class)
+    public ResponseEntity<StandardError> ThereIsNotEvaluationPeriodException(
+        ThereIsNotPeriodOfEvaluationException exception, HttpServletRequest request) {
         StandardError err = new StandardError();
         Map<String, String> errors = new HashMap<>();
         // errors.put("Date", "false");

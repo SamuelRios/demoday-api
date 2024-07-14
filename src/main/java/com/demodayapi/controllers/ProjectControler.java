@@ -2,17 +2,23 @@ package com.demodayapi.controllers;
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.UserTypeEnum;
+import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.EvalRating;
+import com.demodayapi.models.EvalRatingRequest;
 import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
 import com.demodayapi.services.DemodayService;
+import com.demodayapi.services.EvalRatingService;
 import com.demodayapi.services.ProjectService;
 import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +45,12 @@ public class ProjectControler {
 
     @Autowired
     DemodayService demodayService;
+
     @Autowired
     UserService userService;
+
+    @Autowired
+    EvalRatingService evalRatingService;
 
     @PostMapping("/submitproject")
     public ResponseEntity<Project> postProject(@RequestBody Project newProject, HttpServletRequest request) {
@@ -172,6 +182,27 @@ public class ProjectControler {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+     @PostMapping("/evaluateproject")
+    public ResponseEntity<?> evaluateProject(@Valid @RequestBody EvalRatingRequest evalRatingRequest, HttpServletRequest request) {
+        User loggedUser = this.userService.getLoggedUser(request);
+
+        DemodayStatusEnum demodayStatus = demodayService.getDemodayStatus();
+        if (demodayStatus != DemodayStatusEnum.PHASE3)
+            throw new ThereIsNotPeriodOfEvaluationException();
+
+        EvalRating userEvalRate = this.evalRatingService.getUserEvalRateProject(loggedUser.getId(), evalRatingRequest.getProjectId(), evalRatingRequest.getEvalCriteriaId());
+        
+        if(userEvalRate == null){
+            this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequest);
+        } else{
+            System.out.println(userEvalRate.getId());
+            userEvalRate.setRate(evalRatingRequest.getRate());
+            this.evalRatingService.saveEvalRating(userEvalRate);
+        } 
+
+        return new ResponseEntity<>("Avaliação salva.", HttpStatus.OK);
     }
 
 
