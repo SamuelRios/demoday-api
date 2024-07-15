@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
+import com.demodayapi.exceptions.PhaseThreeNotCompletedException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
@@ -33,6 +34,17 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    public StandardError getStandardError(RuntimeException exception, HttpServletRequest request, HttpStatus httpStatus){
+        StandardError err = new StandardError();
+        Map<String, String> errors = new HashMap<>();
+        err.setTimestamp(Instant.now());
+        err.setStatus(httpStatus.value());
+        err.setErrors(errors);
+        err.setMessage(exception.getMessage());
+        err.setPath(request.getRequestURI());
+        return err;
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -98,14 +110,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserNotLoggedException.class)
     public ResponseEntity<StandardError> handleUserNotLoggedExceptions(UserNotLoggedException exception,
             HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        errors.put("logged", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -113,14 +118,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(ValidateBiggestBetweenInitEndException.class)
     public ResponseEntity<StandardError> handleValidateBiggestBetweenInitEndExceptions(
             ValidateBiggestBetweenInitEndException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.BAD_REQUEST.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
@@ -128,14 +126,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(AreadyExistInProgressDemodayException.class)
     public ResponseEntity<StandardError> handleAreadyExistInProgressDemodayExceptions(
             AreadyExistInProgressDemodayException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.CONFLICT.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
@@ -143,14 +134,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserIsNotAdminException.class)
     public ResponseEntity<StandardError> handleUserIsNotAdminExceptions(UserIsNotAdminException exception,
             HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -158,14 +142,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(ThereIsNotPeriodOfSubmissionException.class)
     public ResponseEntity<StandardError> ThereIsNotPeriodOfSubmissionExceptions(
             ThereIsNotPeriodOfSubmissionException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -173,13 +150,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(TherIsNotActiveDemodayException.class)
     public ResponseEntity<StandardError> TherIsNotActiveDemodayExceptions(TherIsNotActiveDemodayException exception,
             HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);;
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
@@ -188,14 +159,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(AccEvalCriteriaNameCanNotBeNullException.class)
     public ResponseEntity<StandardError> AccEvalCriteriaNameCanNotBeNullExceptions(
             AccEvalCriteriaNameCanNotBeNullException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -203,14 +167,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserAlredyHasProjectCreatedException.class)
     public ResponseEntity<StandardError> UserAlredyHasProjectCreatedExceptions(
         UserAlredyHasProjectCreatedException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -218,14 +175,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<StandardError> userNotFoundException(
         UserNotFoundException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.NOT_FOUND.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
 
@@ -233,14 +183,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserPedingException.class)
     public ResponseEntity<StandardError> userPedingException(
         UserPedingException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -248,14 +191,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserRejectedException.class)
     public ResponseEntity<StandardError> userRejectedException(
         UserRejectedException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -263,14 +199,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(ThereIsNotPeriodOfEvaluationException.class)
     public ResponseEntity<StandardError> thereIsNotEvaluationPeriodException(
         ThereIsNotPeriodOfEvaluationException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -278,14 +207,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserHasAlreadyRatedProjectException.class)
     public ResponseEntity<StandardError> userHasAlreadyRatedProjectException(
         UserHasAlreadyRatedProjectException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.UNAUTHORIZED.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
@@ -293,14 +215,15 @@ public class RestExceptionHandler {
     @ExceptionHandler(DuplicateEvaluationByCriteriaException.class)
     public ResponseEntity<StandardError> duplicateEvaluationByCriteria(
         DuplicateEvaluationByCriteriaException exception, HttpServletRequest request) {
-        StandardError err = new StandardError();
-        Map<String, String> errors = new HashMap<>();
-        // errors.put("Date", "false");
-        err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.BAD_REQUEST.value());
-        err.setErrors(errors);
-        err.setMessage(exception.getMessage());
-        err.setPath(request.getRequestURI());
+        StandardError err = getStandardError(exception, request, HttpStatus.BAD_REQUEST);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(PhaseThreeNotCompletedException.class)
+    public ResponseEntity<StandardError> PhaseThreeNotCompletedException(
+        PhaseThreeNotCompletedException exception, HttpServletRequest request) {
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 }

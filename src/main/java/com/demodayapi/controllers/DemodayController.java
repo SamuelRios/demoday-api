@@ -1,6 +1,8 @@
 package com.demodayapi.controllers;
+import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
+import com.demodayapi.exceptions.PhaseThreeNotCompletedException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
@@ -112,5 +114,18 @@ public class DemodayController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    // @PostMapping("/getprojectsdemodayscore/{id}")
+    // public String getProjectsDemodayScore(@PathVariable("id") int demodayId, HttpServletRequest request) {
+    //     DemodayStatusEnum demodayStatus  = demodayService.getDemodayStatus();
+    //     if(demodayStatus)
+    //     if(demodayStatus = null || demodayStatus.equals(DemodayStatusEnum.PHASE1) || demodayStatus.equals(DemodayStatusEnum.PHASE2)){
+    //         throw new PhaseThreeNotCompletedException();
+    //     }
+    //     System.out.println(demodayId);
+    //     return null;
+    // }
+    
 
 }
