@@ -68,7 +68,7 @@ public class ProjectControler {
             @RequestParam(value ="professor",required = false) String professor,
             @RequestParam(value ="linkvideo",required = false)String linkvideo,
             @RequestParam(value ="discipline",required = false)String discipline,
-            @RequestParam(value ="period",required = false) int period,
+            @RequestParam(value ="period",required = false) Integer period,
             @RequestParam(value ="title",required = false) String title,
             @RequestParam(value ="tecnologies",required = false) String tecnologies,
             @RequestParam(value="linkdoc",required = false) String linkdoc,
