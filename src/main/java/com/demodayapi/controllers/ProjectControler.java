@@ -1,6 +1,8 @@
 package com.demodayapi.controllers;
+
 import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.enums.ProjectStatusEnum;
+import com.demodayapi.enums.ProjectTypeEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
@@ -24,6 +26,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +42,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
@@ -59,17 +64,52 @@ public class ProjectControler {
     EvalRatingService evalRatingService;
 
     @PostMapping("/submitproject")
-    public ResponseEntity<Project> postProject(@RequestBody Project newProject, HttpServletRequest request) {
+    public ResponseEntity<Project> postProject(@RequestParam("description") String description,
+            @RequestParam("professor") String professor,
+            @RequestParam("linkvideo") String linkvideo,
+            @RequestParam("discipline") String discipline,
+            @RequestParam("period") int period,
+            @RequestParam("title") String title,
+            @RequestParam("tecnologies") String tecnologies,
+            @RequestParam("linkdoc") String linkdoc,
+            @RequestParam(value ="emails",required = false) String emails,
+            @RequestParam("type") String type,
+            @RequestParam(value ="image", required = false) MultipartFile image,
+            @RequestParam(value ="rejectionReason", required = false) String rejectionReason,
+            HttpServletRequest request) {
+
+            User user = userService.getLoggedUser(request);
+            if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
+                throw new UserAlredyHasProjectCreatedException();
+            Project newProject = new Project();
+            newProject.setUser(user);
         try {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
             if (demodayStatus != DemodayStatusEnum.PHASE1)
                 throw new ThereIsNotPeriodOfSubmissionException();
-            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1(); 
+            Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
+            
+            newProject.setTitle(title);
+            newProject.setDescription(description);
+            newProject.setProfessor(professor);
+            newProject.setLinkvideo(linkvideo);
+            newProject.setDiscipline(discipline);
+            newProject.setTecnologies(tecnologies);
+            newProject.setLinkdoc(linkdoc);
+            newProject.setPeriod(period);
+            newProject.setType(type);
+            newProject.setRejectionReason(rejectionReason);
+            List<String> emailList = Arrays.asList(emails.split(","));
+            newProject.setEmails(emailList);
             newProject.setDemoday(demoday);
-            User user = userService.getLoggedUser(request);
-            if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
-                throw new UserAlredyHasProjectCreatedException();
-            newProject.setUser(user);
+            try {
+                if (image != null)
+                    newProject.setImage(image.getBytes());
+            } catch (Exception e) {
+                newProject.setImage(null);
+
+               
+            }
             Project savedProject = projectService.saveProject(newProject);
             return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
 
@@ -79,18 +119,17 @@ public class ProjectControler {
         }
     }
 
-    
-
     @GetMapping("/getallprojects")
     public ResponseEntity<List<Project>> getAllProjects() throws IOException, MethodArgumentNotValidException {
-        
+
         List<Project> project = projectService.findAll();
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @GetMapping("/getproject")
-    public ResponseEntity <Project> getProject(@RequestParam(defaultValue = "id") int id) throws IOException, MethodArgumentNotValidException {
-        
+    public ResponseEntity<Project> getProject(@RequestParam(defaultValue = "id") int id)
+            throws IOException, MethodArgumentNotValidException {
+
         Project project = projectService.findById(id);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
@@ -103,8 +142,9 @@ public class ProjectControler {
                 throw new ThereIsNotPeriodOfSubmissionException();
             User user = userService.getLoggedUser(request);
             Project existingProject = projectService.findById(projectDetails.getId());
-            if (existingProject != null){
-                if (!existingProject.getUser().getCpf().equals(user.getCpf()) && !userService.isLoggedUserAdmin(request)) {
+            if (existingProject != null) {
+                if (!existingProject.getUser().getCpf().equals(user.getCpf())
+                        && !userService.isLoggedUserAdmin(request)) {
                     throw new RuntimeException("Usuário não autorizado a editar este projeto");
                 }
                 Project savedProject = this.projectService.updateProject(existingProject, projectDetails);
@@ -122,30 +162,33 @@ public class ProjectControler {
     public ResponseEntity<List<Project>> getProjectsByDemodayId(@PathVariable int demoday_id) {
         System.out.println(demoday_id);
         List<Project> projects = projectService.findByDemodayId(demoday_id);
-            return new ResponseEntity<>(projects, HttpStatus.OK);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
     @GetMapping("/getdemodayacceptedprojects/{demoday_id}")
     public ResponseEntity<List<Project>> getAcceptedProjectsByDemodayId(@PathVariable int demoday_id) {
-        
+
         List<Project> projects = projectService.findByDemodayIdAndStatus(demoday_id, ProjectStatusEnum.ACCEPTED);
         return new ResponseEntity<>(projects, HttpStatus.OK);
 
     }
 
-     @DeleteMapping("/deleteprojects/{id}")
-        public ResponseEntity<Void> deleteProject(@PathVariable int id,HttpServletRequest request) {
-        if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
+    @DeleteMapping("/deleteprojects/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable int id, HttpServletRequest request) {
+        if (!userService.isLoggedUserAdmin(request))
+            throw new UserIsNotAdminException();
         projectService.deleteProjectById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/pendingprojects")
-    public ResponseEntity<List<Project>> getPendingProjects(HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
+    public ResponseEntity<List<Project>> getPendingProjects(HttpServletRequest request)
+            throws IOException, MethodArgumentNotValidException {
         User user = userService.getLoggedUser(request);
-        UserTypeEnum userType= user.getType();
-        if(userType==UserTypeEnum.STUDENT)throw new UserIsNotAdminException();
-        List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED); 
+        UserTypeEnum userType = user.getType();
+        if (userType == UserTypeEnum.STUDENT)
+            throw new UserIsNotAdminException();
+        List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
@@ -170,7 +213,8 @@ public class ProjectControler {
     }
 
     @PostMapping("/rejectproject/{id}")
-    public ResponseEntity<?> rejectProject(@PathVariable int id, @RequestBody Map<String, String> requestBody, HttpServletRequest request) {
+    public ResponseEntity<?> rejectProject(@PathVariable int id, @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request) {
         try {
             User user = userService.getLoggedUser(request);
             if (user.getType() == UserTypeEnum.STUDENT) {
@@ -190,16 +234,17 @@ public class ProjectControler {
         }
     }
 
-     @PostMapping("/evaluateproject")
-    public ResponseEntity<?> evaluateProject( @Valid @RequestBody EvalRatingRequestList evalRatingRequestList, HttpServletRequest request) {
+    @PostMapping("/evaluateproject")
+    public ResponseEntity<?> evaluateProject(@Valid @RequestBody EvalRatingRequestList evalRatingRequestList,
+            HttpServletRequest request) {
         User loggedUser = this.userService.getLoggedUser(request);
 
-        DemodayStatusEnum demodayStatus  = demodayService.getDemodayStatus();
+        DemodayStatusEnum demodayStatus = demodayService.getDemodayStatus();
         if (demodayStatus != DemodayStatusEnum.PHASE3)
             throw new ThereIsNotPeriodOfEvaluationException();
         System.out.println(demodayStatus);
 
-        if(this.evalRatingService.hasUserVotedProject(loggedUser.getId(), evalRatingRequestList.getProjectId())){
+        if (this.evalRatingService.hasUserVotedProject(loggedUser.getId(), evalRatingRequestList.getProjectId())) {
             throw new UserHasAlreadyRatedProjectException();
         }
 
@@ -207,26 +252,25 @@ public class ProjectControler {
 
         List<EvalRatingRequest> evalRartingRequests = evalRatingRequestList.getEvalRatings();
         System.out.println(demodayStatus);
-        for(EvalRatingRequest evalRatingRequest: evalRartingRequests){
+        for (EvalRatingRequest evalRatingRequest : evalRartingRequests) {
             try {
-                this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequestList.getProjectId(),  evalRatingRequest);
+                this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequestList.getProjectId(),
+                        evalRatingRequest);
             } catch (Exception e) {
-                this.evalRatingService.deleteEvalRatingsByUserAndProject(loggedUser.getId(),  evalRatingRequestList.getProjectId());
-                if(e.getMessage().contains("Duplicate entry")){
-                    throw new DuplicateEvaluationByCriteriaException("Avaliação duplicada para o critério com id " + Integer.toString(evalRatingRequest.getRate())  + ".");
+                this.evalRatingService.deleteEvalRatingsByUserAndProject(loggedUser.getId(),
+                        evalRatingRequestList.getProjectId());
+                if (e.getMessage().contains("Duplicate entry")) {
+                    throw new DuplicateEvaluationByCriteriaException("Avaliação duplicada para o critério com id "
+                            + Integer.toString(evalRatingRequest.getRate()) + ".");
                 } else {
                     e.printStackTrace();
                     return new ResponseEntity<>("Erro Interno.", HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
-           
+
         }
         System.out.println(demodayStatus);
         return new ResponseEntity<>("Avaliação salva.", HttpStatus.OK);
     }
 
-
 }
-
-
-
