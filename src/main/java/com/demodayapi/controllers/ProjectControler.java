@@ -99,16 +99,19 @@ public class ProjectControler {
             newProject.setPeriod(period);
             newProject.setType(type);
             newProject.setRejectionReason(rejectionReason);
+            if (emails !=null) {
+            System.out.println("ENTROU IFF");
             List<String> emailList = Arrays.asList(emails.split(","));
             newProject.setEmails(emailList);
+            }
+           
             newProject.setDemoday(demoday);
             try {
                 if (image != null)
                     newProject.setImage(image.getBytes());
             } catch (Exception e) {
                 newProject.setImage(null);
-
-               
+            
             }
             Project savedProject = projectService.saveProject(newProject);
             return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
