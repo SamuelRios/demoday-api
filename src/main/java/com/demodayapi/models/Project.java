@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -78,10 +79,6 @@ public class Project {
     @Column(name = "emails", nullable = true)
     private List<String> emails;
     
-
-    @Column(length = 500)
-    private String image;
-       
     @ManyToOne
     @JoinColumn(name = "demoday_id")
     private Demoday demoday;
@@ -96,6 +93,19 @@ public class Project {
     private User user;
 
 
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
+
+    // Outros campos e métodos
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
     // Getters and Setters
     public int getId() {
         return id;
@@ -202,14 +212,6 @@ public class Project {
 
     public void setStatus(String status) {
         this.status = ProjectStatusEnum.valueOf(status);
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
 
