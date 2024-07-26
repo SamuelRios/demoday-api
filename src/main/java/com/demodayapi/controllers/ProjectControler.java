@@ -64,16 +64,16 @@ public class ProjectControler {
     EvalRatingService evalRatingService;
 
     @PostMapping("/submitproject")
-    public ResponseEntity<Project> postProject(@RequestParam("description") String description,
-            @RequestParam("professor") String professor,
-            @RequestParam("linkvideo") String linkvideo,
-            @RequestParam("discipline") String discipline,
-            @RequestParam("period") int period,
-            @RequestParam("title") String title,
-            @RequestParam("tecnologies") String tecnologies,
-            @RequestParam("linkdoc") String linkdoc,
+    public ResponseEntity<Project> postProject(@RequestParam(value ="description",required = false) String description,
+            @RequestParam(value ="professor",required = false) String professor,
+            @RequestParam(value ="linkvideo",required = false)String linkvideo,
+            @RequestParam(value ="discipline",required = false)String discipline,
+            @RequestParam(value ="period",required = false) int period,
+            @RequestParam(value ="title",required = false) String title,
+            @RequestParam(value ="tecnologies",required = false) String tecnologies,
+            @RequestParam(value="linkdoc",required = false) String linkdoc,
             @RequestParam(value ="emails",required = false) String emails,
-            @RequestParam("type") String type,
+            @RequestParam(value= "type", required = false) String type,
             @RequestParam(value ="image", required = false) MultipartFile image,
             @RequestParam(value ="rejectionReason", required = false) String rejectionReason,
             HttpServletRequest request) {
