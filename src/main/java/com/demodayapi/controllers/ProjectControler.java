@@ -74,6 +74,7 @@ public class ProjectControler {
             @RequestParam(value="linkdoc",required = false) String linkdoc,
             @RequestParam(value ="emails",required = false) String emails,
             @RequestParam(value= "type", required = false) String type,
+            @RequestParam(value= "year", required = false) Year type,
             @RequestParam(value ="image", required = false) MultipartFile image,
             @RequestParam(value ="rejectionReason", required = false) String rejectionReason,
             HttpServletRequest request) {
@@ -90,6 +91,7 @@ public class ProjectControler {
             Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
             
             newProject.setTitle(title);
+            newProject.setYear(year);
             newProject.setDescription(description);
             newProject.setProfessor(professor);
             newProject.setLinkvideo(linkvideo);
