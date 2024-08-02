@@ -5,9 +5,11 @@ import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
+import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
+import com.demodayapi.exceptions.UserDoesntHaveProjectException;
 import com.demodayapi.exceptions.UserHasAlreadyRatedProjectException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.models.Demoday;
@@ -28,6 +30,7 @@ import jakarta.validation.constraints.Size;
 import java.io.IOException;
 import java.time.Year;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,32 +67,33 @@ public class ProjectControler {
     EvalRatingService evalRatingService;
 
     @PostMapping("/submitproject")
-    public ResponseEntity<Project> postProject(@RequestParam(value ="description",required = false) String description,
-            @RequestParam(value ="professor",required = false) String professor,
-            @RequestParam(value ="linkvideo",required = false)String linkvideo,
-            @RequestParam(value ="discipline",required = false)String discipline,
-            @RequestParam(value ="period",required = false) Integer period,
-            @RequestParam(value ="title",required = false) String title,
-            @RequestParam(value ="tecnologies",required = false) String tecnologies,
-            @RequestParam(value="linkdoc",required = false) String linkdoc,
-            @RequestParam(value ="emails",required = false) String emails,
-            @RequestParam(value= "type", required = false) String type,
-            @RequestParam(value= "year", required = false) Year year,
-            @RequestParam(value ="image", required = false) MultipartFile image,
-            @RequestParam(value ="rejectionReason", required = false) String rejectionReason,
+    public ResponseEntity<Project> postProject(
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "professor", required = false) String professor,
+            @RequestParam(value = "linkvideo", required = false) String linkvideo,
+            @RequestParam(value = "discipline", required = false) String discipline,
+            @RequestParam(value = "period", required = false) Integer period,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "tecnologies", required = false) String tecnologies,
+            @RequestParam(value = "linkdoc", required = false) String linkdoc,
+            @RequestParam(value = "emails", required = false) String emails,
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "year", required = false) Year year,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "rejectionReason", required = false) String rejectionReason,
             HttpServletRequest request) {
 
-            User user = userService.getLoggedUser(request);
-            if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
-                throw new UserAlredyHasProjectCreatedException();
-            Project newProject = new Project();
-            newProject.setUser(user);
+        User user = userService.getLoggedUser(request);
+        if (this.projectService.verifyIfUserHasProjectCreated(request) && !userService.isLoggedUserAdmin(request))
+            throw new UserAlredyHasProjectCreatedException();
+        Project newProject = new Project();
+        newProject.setUser(user);
         try {
             DemodayStatusEnum demodayStatus = demodayService.verifyphase1InProgress();
             if (demodayStatus != DemodayStatusEnum.PHASE1)
                 throw new ThereIsNotPeriodOfSubmissionException();
             Demoday demoday = demodayService.getDemodayWithBiggestValuePhase1();
-            
+
             newProject.setTitle(title);
             newProject.setYear(year);
             newProject.setDescription(description);
@@ -101,19 +105,19 @@ public class ProjectControler {
             newProject.setPeriod(period);
             newProject.setType(type);
             newProject.setRejectionReason(rejectionReason);
-            if (emails !=null) {
-            System.out.println("ENTROU IFF");
-            List<String> emailList = Arrays.asList(emails.split(","));
-            newProject.setEmails(emailList);
+            if (emails != null) {
+                System.out.println("ENTROU IFF");
+                List<String> emailList = Arrays.asList(emails.split(","));
+                newProject.setEmails(emailList);
             }
-           
+
             newProject.setDemoday(demoday);
             try {
                 if (image != null)
                     newProject.setImage(image.getBytes());
             } catch (Exception e) {
                 newProject.setImage(null);
-            
+
             }
             Project savedProject = projectService.saveProject(newProject);
             return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
@@ -139,11 +143,35 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @GetMapping("/getprojectbyuser")
-    public ResponseEntity <List<Project>> getProjectbyuser(@RequestParam(defaultValue = "iduser") String iduser, HttpServletRequest request)
+    @GetMapping("/getprojecstbyuser")
+    public ResponseEntity<List<Project>> getProjectbyuser(@RequestParam(defaultValue = "iduser") String iduser,
+            HttpServletRequest request)
             throws IOException, MethodArgumentNotValidException {
+        try {
             User user = userService.getLoggedUser(request);
             List<Project> project = projectService.listProjectsByUser(user.getId());
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new UserDoesntHaveProjectException();
+        }
+
+    }
+
+    @GetMapping("/getcurrentprojectbyuser")
+    public ResponseEntity<Project> getCurrentbyuser(@RequestParam(defaultValue = "iduser") String iduser,
+            HttpServletRequest request)
+            throws IOException, MethodArgumentNotValidException {
+
+        List<Demoday> demoday = demodayService.getDemodayInProgress();
+        if (demoday == null)
+            throw new TherIsNotActiveDemodayException();
+        User user = userService.getLoggedUser(request);
+        System.out.println(demoday.get(0).getId());
+        Project project = projectService.currentProjectByuser(user.getId(), demoday.get(0).getId());
+        if (project == null) {
+            throw new UserDoesntHaveProjectException();
+
+        }
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 

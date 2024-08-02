@@ -19,6 +19,7 @@ import com.demodayapi.exceptions.PhaseThreeNotCompletedException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
+import com.demodayapi.exceptions.UserDoesntHaveProjectException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserHasAlreadyRatedProjectException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
@@ -226,4 +227,13 @@ public class RestExceptionHandler {
         StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserDoesntHaveProjectException.class)
+    public ResponseEntity<StandardError> UserDoesntHaveProject(
+        UserDoesntHaveProjectException exception, HttpServletRequest request) {
+        StandardError err = getStandardError(exception, request, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
 }

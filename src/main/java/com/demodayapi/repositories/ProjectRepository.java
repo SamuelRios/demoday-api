@@ -30,6 +30,11 @@ public interface ProjectRepository extends CrudRepository<Project, Integer>{
     @Query("SELECT p FROM Project p WHERE p.user.id =:iduser")
     List<Project> listProjectsOfUser(@Param("iduser") String iduser);
 
+
+    @Query("SELECT p FROM Project p WHERE p.user.id = :iduser AND p.demoday.id = :demoday")
+    Project currentProjectByuser(@Param("iduser") String iduser, @Param("demoday") int demoday);
+
+
     List<Project> findByDemodayId(int demodayId);
 
     List<Project> findByDemodayIdAndStatus(int demodayId, ProjectStatusEnum status);

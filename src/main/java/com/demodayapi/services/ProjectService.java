@@ -81,6 +81,9 @@ public class ProjectService {
 public List<Project> listProjectsByUser(String iduser){
   return projectRepository.listProjectsOfUser(iduser);
 }
+public Project currentProjectByuser(String iduser, int demoday){
+  return projectRepository.currentProjectByuser(iduser,demoday);
+}
   public List<Project> findSubmitted(){
     return projectRepository.findByStatus(ProjectStatusEnum.SUBMITTED);
   }
