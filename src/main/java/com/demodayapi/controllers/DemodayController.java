@@ -1,8 +1,6 @@
 package com.demodayapi.controllers;
-import com.demodayapi.enums.DemodayStatusEnum;
 import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
-import com.demodayapi.exceptions.PhaseThreeNotCompletedException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
