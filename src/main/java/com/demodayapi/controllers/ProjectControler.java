@@ -137,6 +137,14 @@ public class ProjectControler {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @GetMapping("/getprojectbyuser")
+    public ResponseEntity <List<Project>> getProjectbyuser(@RequestParam(defaultValue = "iduser") String iduser, HttpServletRequest request)
+            throws IOException, MethodArgumentNotValidException {
+            User user = userService.getLoggedUser(request);
+            List<Project> project = projectService.listProjectsByUser(user.getId());
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
     @PostMapping("/updateproject")
     public ResponseEntity<Project> updateProject(Project projectDetails, HttpServletRequest request) {
         try {

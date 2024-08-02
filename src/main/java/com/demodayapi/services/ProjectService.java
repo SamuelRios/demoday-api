@@ -77,13 +77,17 @@ public class ProjectService {
   }
   return false; // Se não encontrar nenhum projeto associado ao usuário retorna false
 }
-
+ 
+public List<Project> listProjectsByUser(String iduser){
+  return projectRepository.listProjectsOfUser(iduser);
+}
   public List<Project> findSubmitted(){
     return projectRepository.findByStatus(ProjectStatusEnum.SUBMITTED);
   }
   public List<Project> findAccepted(){
     return projectRepository.findByStatus(ProjectStatusEnum.ACCEPTED);
   }
+
 @Transactional
 public void deleteProjectById(int id) {
     Project project = projectRepository.findById(id);
