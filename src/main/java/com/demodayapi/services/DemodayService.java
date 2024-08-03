@@ -175,9 +175,10 @@ public class DemodayService {
 
             if(demoday.getPhaseThreeInit() != null && demoday.getPhaseThreeEnd() != null){
                 if(
-                    demoday.getPhaseThreeInit().isEqual(dataAtual) || demoday.getPhaseThreeInit().isBefore(dataAtual) &&
+                    demoday.getPhaseThreeInit().isEqual(dataAtual) || demoday.getPhaseThreeInit().isBefore(dataAtual) ||
                     demoday.getPhaseThreeEnd().isAfter(dataAtual) || demoday.getPhaseThreeEnd().isEqual(dataAtual)
-                ) return DemodayStatusEnum.PHASE3;
+                )
+                    return DemodayStatusEnum.PHASE3;
             } else return null;
 
             if(demoday.getPhaseFourInit() != null && demoday.getPhaseFourEnd() != null){

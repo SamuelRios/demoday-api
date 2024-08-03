@@ -1,6 +1,10 @@
 package com.demodayapi.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +19,7 @@ import com.demodayapi.repositories.EvalRatingRepository;
 @Service
 public class EvalRatingService {
     @Autowired
-    EvalRatingRepository evalRatingRepository;
+    private EvalRatingRepository evalRatingRepository;
 
     public EvalRating updateEvalRating(int id, EvalRating updatedEvalRating) {
         return evalRatingRepository.findById(id).map(evalRating -> {
@@ -58,5 +62,15 @@ public class EvalRatingService {
 
     public void deleteEvalRatingsByUserAndProject(String userId, int projectId){
         this.evalRatingRepository.deleteByUserIdAndProjectId(userId, projectId);
+    }
+
+    public List<EvalRating> findAll(){
+        return evalRatingRepository.findAll();
+    }
+
+    public double getTotalRatingByProject(int projectId){
+        List<EvalRating> evalRatings = findAll();
+        return evalRatings.stream().filter(rating -> rating.getProjectId() == projectId).mapToInt(EvalRating::getRate).average().orElse(0.0);
+
     }
 }
