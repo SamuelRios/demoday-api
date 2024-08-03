@@ -1,5 +1,6 @@
 package com.demodayapi.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +16,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 @Repository
-public interface EvalRatingRepository extends CrudRepository<EvalRating, Integer> {
+public interface EvalRatingRepository extends JpaRepository<EvalRating, Integer> {
     List<EvalRating> findByUserAndProject(User user, Project project);
+
 
     @Modifying
     @Transactional

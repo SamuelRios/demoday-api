@@ -21,7 +21,7 @@ public class EvalRating {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id; //id da avaliação do user
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
