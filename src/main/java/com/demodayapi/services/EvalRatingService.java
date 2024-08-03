@@ -5,7 +5,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +69,18 @@ public class EvalRatingService {
         return evalRatingRepository.findAll();
     }
 
-    public double getTotalRatingByProject(int projectId){
+    public Map<Integer, Double> getAllProjectRatings() {
         List<EvalRating> evalRatings = findAll();
-        return evalRatings.stream().filter(rating -> rating.getProjectId() == projectId).mapToInt(EvalRating::getRate).average().orElse(0.0);
-
+        return evalRatings.stream()
+                .collect(Collectors.groupingBy(
+                        EvalRating::getProjectId,
+                        Collectors.averagingDouble(EvalRating::getRate)))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
     }
 }
