@@ -36,8 +36,8 @@ public class ProjectService {
     return this.projectRepository.listProjectsOfMostRecentDemoday();
   }
 
-  public List <Project> listOfPenddingProjects(ProjectStatusEnum status){
-     return this.projectRepository.listProjectsStatusIsSubmitted(status);
+  public List <Project> listOfPenddingProjects(ProjectStatusEnum status, int demoday){
+     return this.projectRepository.listProjectsStatusIsSubmitted(status,demoday);
   }
 
   public Project updateProject(Project existingProject, Project projectDetails) {
