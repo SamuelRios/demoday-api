@@ -47,7 +47,9 @@ public class EvalRatingService {
         }
         return false;
     }
-
+    public List<EvalRating> projectEvaluatedbByUser(String iduser, int idDemoday) {
+        return evalRatingRepository.projectevaluatedbyuser(iduser,idDemoday);
+    }
     public EvalRating saveOrUpdateEvalRating(EvalRating evalRating) {
         return evalRatingRepository.save(evalRating);
     }

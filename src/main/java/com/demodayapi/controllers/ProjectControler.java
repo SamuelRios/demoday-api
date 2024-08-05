@@ -32,11 +32,15 @@ import jakarta.validation.constraints.Size;
 
 import java.io.IOException;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -180,6 +184,62 @@ public class ProjectControler {
 
         }
         return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/available-and-evaluated")
+    public ResponseEntity<List<Map<String, Object>>> getprojectsabletoevaluate(
+            HttpServletRequest request) throws IOException, MethodArgumentNotValidException {
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<Project> projetos = new ArrayList<>();
+        List<Demoday> demoday = demodayService.getDemodayInProgress();
+
+        if (demoday == null)
+            throw new TherIsNotActiveDemodayException();
+        User user = userService.getLoggedUser(request);
+        int idDemoday = demoday.get(0).getId();
+        List<Project> projects = projectService.findByDemodayIdAndStatus(idDemoday,ProjectStatusEnum.ACCEPTED);
+        Set<Integer> projectIds = new HashSet<>();
+
+        List<EvalRating> eval = evalRatingService.projectEvaluatedbByUser(user.getId(), idDemoday);
+
+        // Coletar projetos únicos
+        for (EvalRating objeto : eval) {
+            Project projeto = objeto.getProject();
+
+            if (projetos.isEmpty() || !projetos.get(projetos.size() - 1).equals(projeto)) {
+                projetos.add(projeto);
+            }
+        }
+        // Cria um mapa para cada projeto e adicionar avaliações
+        for (Project item : projetos) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("project", item);
+            projectIds.add(item.getId()); // Adiciona o ID do projeto ao Set
+
+            List<Map<String, Object>> evalList = new ArrayList<>();
+            for (EvalRating objeto : eval) {
+                Project projeto = objeto.getProject();
+                if (projeto.equals(item)) {
+                    Map<String, Object> evalMap = new HashMap<>();
+                    evalMap.put("evalCriteriaId", objeto.getEvalCriteria().getId());
+                    evalMap.put("rate", objeto.getRate());
+                    evalList.add(evalMap);
+                }
+            }
+
+            map.put("evaluations", evalList);
+            result.add(map);
+        }
+        for (Project projeto : projects) {
+            if (!projectIds.contains(projeto.getId())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("project", projeto);
+                result.add(map);
+                projectIds.add(projeto.getId()); // Adiciona o ID do projeto ao Set para evitar duplicatas
+            }
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/updateproject")

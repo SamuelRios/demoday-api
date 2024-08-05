@@ -28,4 +28,8 @@ public interface EvalRatingRepository extends JpaRepository<EvalRating, Integer>
     @Transactional
     @Query("DELETE FROM EvalRating er WHERE er.user.id = :userId AND er.project.id = :projectId AND er.phase = :phase")
     void deleteByUserIdAndProjectIdAndPhase(@Param("userId") String userId, @Param("projectId") int projectId, @Param("phase") PhaseEvalRateEnum phase);
+    
+    @Query("SELECT p FROM EvalRating p WHERE p.user.id = :iduser AND p.project.demoday.id = :idDemoday")
+    List<EvalRating> projectevaluatedbyuser(@Param("iduser") String iduser, @Param("idDemoday") int idDemoday);
+    //@Query("SELECT p.project, p.evalCriteria.id, p.rate FROM EvalRating p WHERE p.user.id = :iduser")
 }
