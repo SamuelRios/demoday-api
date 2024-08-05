@@ -1,10 +1,12 @@
 package com.demodayapi.controllers;
 
 import com.demodayapi.enums.DemodayStatusEnum;
+import com.demodayapi.enums.PhaseEvalRateEnum;
 import com.demodayapi.enums.ProjectStatusEnum;
 import com.demodayapi.enums.ProjectTypeEnum;
 import com.demodayapi.enums.UserTypeEnum;
 import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
+import com.demodayapi.exceptions.ProjectIsNotFinalistException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
@@ -19,6 +21,7 @@ import com.demodayapi.models.Project;
 import com.demodayapi.models.User;
 import com.demodayapi.services.DemodayService;
 import com.demodayapi.services.EvalRatingService;
+import com.demodayapi.services.FinalistService;
 import com.demodayapi.services.ProjectService;
 import com.demodayapi.services.UserService;
 import com.demodayapi.models.EvalRatingRequestList;
@@ -65,6 +68,10 @@ public class ProjectControler {
 
     @Autowired
     EvalRatingService evalRatingService;
+
+
+    @Autowired
+    FinalistService finalistService;
 
     @PostMapping("/submitproject")
     public ResponseEntity<Project> postProject(
@@ -281,11 +288,20 @@ public class ProjectControler {
         User loggedUser = this.userService.getLoggedUser(request);
 
         DemodayStatusEnum demodayStatus = demodayService.getDemodayStatus();
-        if (demodayStatus != DemodayStatusEnum.PHASE3)
-            throw new ThereIsNotPeriodOfEvaluationException();
         System.out.println(demodayStatus);
+        PhaseEvalRateEnum phaseEvalRate;
+        if(demodayStatus == DemodayStatusEnum.PHASE3 ){
+            phaseEvalRate = PhaseEvalRateEnum.PHASE3;
+        } else if(demodayStatus == DemodayStatusEnum.PHASE4){
+            if(!this.finalistService.isProjectFinalist(evalRatingRequestList.getProjectId())){
+                throw new ProjectIsNotFinalistException();
+            }
+            phaseEvalRate = PhaseEvalRateEnum.PHASE4;
+        } else  throw new ThereIsNotPeriodOfEvaluationException();
 
-        if (this.evalRatingService.hasUserVotedProject(loggedUser.getId(), evalRatingRequestList.getProjectId())) {
+
+
+        if (this.evalRatingService.hasUserVotedProject(loggedUser.getId(), evalRatingRequestList.getProjectId(), phaseEvalRate)) {
             throw new UserHasAlreadyRatedProjectException();
         }
 
@@ -296,13 +312,13 @@ public class ProjectControler {
         for (EvalRatingRequest evalRatingRequest : evalRartingRequests) {
             try {
                 this.evalRatingService.createNewEvalRating(loggedUser.getId(), evalRatingRequestList.getProjectId(),
-                        evalRatingRequest);
+                        evalRatingRequest, phaseEvalRate);
             } catch (Exception e) {
-                this.evalRatingService.deleteEvalRatingsByUserAndProject(loggedUser.getId(),
-                        evalRatingRequestList.getProjectId());
+                this.evalRatingService.deleteEvalRatingsByUserAndProjectAndPhase(loggedUser.getId(),
+                        evalRatingRequestList.getProjectId(), phaseEvalRate);
                 if (e.getMessage().contains("Duplicate entry")) {
                     throw new DuplicateEvaluationByCriteriaException("Avaliação duplicada para o critério com id "
-                            + Integer.toString(evalRatingRequest.getRate()) + ".");
+                            + Integer.toString(evalRatingRequest.getEvalCriteriaId()) + ".");
                 } else {
                     e.printStackTrace();
                     return new ResponseEntity<>("Erro Interno.", HttpStatus.INTERNAL_SERVER_ERROR);

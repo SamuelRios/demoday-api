@@ -16,6 +16,7 @@ import com.demodayapi.exceptions.AccEvalCriteriaNameCanNotBeNullException;
 import com.demodayapi.exceptions.AreadyExistInProgressDemodayException;
 import com.demodayapi.exceptions.DuplicateEvaluationByCriteriaException;
 import com.demodayapi.exceptions.PhaseThreeNotCompletedException;
+import com.demodayapi.exceptions.ProjectIsNotFinalistException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
@@ -234,6 +235,14 @@ public class RestExceptionHandler {
         UserDoesntHaveProjectException exception, HttpServletRequest request) {
         StandardError err = getStandardError(exception, request, HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ProjectIsNotFinalistException.class)
+    public ResponseEntity<StandardError> projectIsNotFinalistException(
+        ProjectIsNotFinalistException exception, HttpServletRequest request) {
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
 }
