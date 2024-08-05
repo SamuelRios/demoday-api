@@ -22,4 +22,9 @@ public interface EvalRatingRepository extends CrudRepository<EvalRating, Integer
     @Transactional
     @Query("DELETE FROM EvalRating er WHERE er.user.id = :userId AND er.project.id = :projectId")
     void deleteByUserIdAndProjectId(@Param("userId") String userId, @Param("projectId") int projectId);
+ 
+    
+    @Query("SELECT p FROM EvalRating p WHERE p.user.id = :iduser AND p.project.demoday.id = :idDemoday")
+    List<EvalRating> projectevaluatedbyuser(@Param("iduser") String iduser, @Param("idDemoday") int idDemoday);
+    //@Query("SELECT p.project, p.evalCriteria.id, p.rate FROM EvalRating p WHERE p.user.id = :iduser")
 }
