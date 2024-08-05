@@ -125,6 +125,12 @@ public class UserService {
         else return false;
     }
 
+    public Boolean isLoggedUserProfessor(HttpServletRequest request){
+        User loggedUser = this.getLoggedUser(request);
+        if(loggedUser.getType().equals(UserTypeEnum.PROFESSOR)) return true;
+        else return false;
+    }
+
 
     public void checkUserStatus(User user){
         UserStatusEnum userStataus = user.getStatus();

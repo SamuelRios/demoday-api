@@ -148,19 +148,56 @@ public class DemodayService {
         return null;
     }
 
+    public Demoday getActiveDemoday() {
+        List<Demoday> demodays = this.getDemodayInProgress();
+        if(demodays != null ){
+            return demodays.get(0);
+        }
+        return null;
+    }
+
     public List<Demoday> getAllDemodays(){
         return this.demodayRepository.findAll();
+    }
+
+    private Demoday geyDemodayById(int demodayId){
+        return this.demodayRepository.findById(demodayId);
+        
     }
 
     public Demoday getDemodayWithBiggestValuePhase1() {
         return this.demodayRepository.getPhase1();
     }
 
+    public boolean isAfterDemodayPhase(Integer demodayId, DemodayStatusEnum demodayStatus){
+        Demoday demoday = this.geyDemodayById(demodayId);
+        if(demoday != null){
+            LocalDate dateEndPhase;
+            if(demodayStatus.equals(DemodayStatusEnum.PHASE1)) dateEndPhase = demoday.getPhaseOneEnd();
+            else if(demodayStatus.equals(DemodayStatusEnum.PHASE2)) dateEndPhase = demoday.getPhaseTwoEnd();
+            else if(demodayStatus.equals(DemodayStatusEnum.PHASE3)) dateEndPhase = demoday.getPhaseThreeEnd();
+            else dateEndPhase = demoday.getPhaseFourEnd();
+
+            if(dateEndPhase == null) return false;
+
+            LocalDate dataAtual = LocalDate.now();
+
+            if(dateEndPhase.isBefore(dataAtual)) return true;
+            else return false;
+
+        } else return true;
+
+    }
+
     public DemodayStatusEnum getDemodayStatus(){
         List<Demoday> demodayList = this.getDemodayInProgress();
         if(demodayList != null){
             Demoday demoday = demodayList.get(0);
+            System.out.println(demoday.getPhaseThreeEnd().toString());
+            System.out.println(demoday.getPhaseFourInit().toString());
             LocalDate dataAtual = LocalDate.now();
+
+            System.out.println(dataAtual.toString());
             if(
                 demoday.getPhaseOneInit().isEqual(dataAtual) || demoday.getPhaseOneInit().isBefore(dataAtual) &&
                 demoday.getPhaseOneEnd().isAfter(dataAtual) || demoday.getPhaseOneEnd().isEqual(dataAtual)
@@ -177,7 +214,8 @@ public class DemodayService {
                 if(
                     demoday.getPhaseThreeInit().isEqual(dataAtual) || demoday.getPhaseThreeInit().isBefore(dataAtual) &&
                     demoday.getPhaseThreeEnd().isAfter(dataAtual) || demoday.getPhaseThreeEnd().isEqual(dataAtual)
-                ) return DemodayStatusEnum.PHASE3;
+                )
+                    return DemodayStatusEnum.PHASE3;
             } else return null;
 
             if(demoday.getPhaseFourInit() != null && demoday.getPhaseFourEnd() != null){

@@ -22,6 +22,7 @@ import com.demodayapi.exceptions.UserCPFAlreadyExistsException;
 import com.demodayapi.exceptions.UserEmailAlreadyExistsException;
 import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.UserNotLoggedException;
+import com.demodayapi.models.UpdateUserDTO;
 import com.demodayapi.models.User;
 import com.demodayapi.services.FirebaseService;
 import com.demodayapi.services.UserService;
@@ -75,6 +76,39 @@ public class UserController {
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateUser( @PathVariable String id, @RequestBody @Valid UpdateUserDTO updateUserDTO, HttpServletRequest request ) throws IOException, MethodArgumentNotValidException {
+        User loggedUser = this.userService.getLoggedUser(request);
+        
+        if(loggedUser.getId().equals(id) || this.userService.isLoggedUserAdmin(request)){
+            User userEdit = this.userService.getUserById(id);
+            if(updateUserDTO.getEmail() != null && !updateUserDTO.getEmail().equals(userEdit.getEmail())){
+                if (userService.existsEmail(updateUserDTO.getEmail()))
+                    throw new UserEmailAlreadyExistsException();
+                userEdit.setEmail(updateUserDTO.getEmail());
+            }
+            if (updateUserDTO.getName() != null) {
+                userEdit.setName(updateUserDTO.getName());
+            }
+            
+            if (updateUserDTO.getCpf() != null && !updateUserDTO.getCpf().equals(userEdit.getCpf())) {
+                if (userService.existsCPF(updateUserDTO.getCpf()))
+                    throw new UserCPFAlreadyExistsException();
+                userEdit.setCpf(updateUserDTO.getCpf());
+            }
+            if (updateUserDTO.getUniversity() != null) {
+                userEdit.setUniversity(updateUserDTO.getUniversity());
+            }
+            User savedUser = userService.saveUser(userEdit);
+            if (savedUser != null) {
+                return new ResponseEntity<>(savedUser, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new HashMap<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            } 
+        } 
+        return new ResponseEntity<>("Usuário logado não tem permissão para alterar dados de outros usuários.", HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/getusers")

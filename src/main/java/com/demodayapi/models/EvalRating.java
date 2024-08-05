@@ -1,7 +1,11 @@
 package com.demodayapi.models;
 
+import com.demodayapi.enums.PhaseEvalRateEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,13 +19,13 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="eval_rating", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "project_id", "eval_criteria_id"})
+    @UniqueConstraint(columnNames = {"user_id", "project_id", "eval_criteria_id", "phase"})
 })
 public class EvalRating {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id; //id da avaliação do user
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -42,6 +46,10 @@ public class EvalRating {
     @Min(value = 1, message = "O valor deve ser no mínimo {value}.")
     @Max(value = 5, message = "O valor deve ser no máximo {value}.")
     private Integer rate;
+
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private PhaseEvalRateEnum phase;
 
     public int getId() {
         return id;
@@ -89,6 +97,14 @@ public class EvalRating {
 
     public int getEvalCriteriaId(){
         return this.evalCriteria.getId();
+    }
+
+    public PhaseEvalRateEnum  getPhase() {
+        return this.phase;
+    }
+
+    public void setPhase(PhaseEvalRateEnum phaseEvalRate) {
+        this.phase = phaseEvalRate;
     }
 
 

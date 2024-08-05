@@ -6,9 +6,11 @@ import com.demodayapi.exceptions.UserIsNotAdminException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.models.Committee;
 import com.demodayapi.models.Demoday;
+import com.demodayapi.models.Finalist;
 import com.demodayapi.services.CommitteeService;
 import com.demodayapi.services.CommitteeUserService;
 import com.demodayapi.services.DemodayService;
+import com.demodayapi.services.FinalistService;
 import com.demodayapi.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -41,6 +43,9 @@ public class DemodayController {
 
     @Autowired
     CommitteeUserService committeeUserService;
+
+    @Autowired
+    FinalistService finalistService;
 
     @GetMapping("/")
     public String hello() {
@@ -96,7 +101,8 @@ public class DemodayController {
 
     
     @DeleteMapping("/deletedemoday/{id}")
-    public ResponseEntity<Void> deleteDemoday(@PathVariable int id,HttpServletRequest request) {
+    public ResponseEntity<Void> deleteDemoday(@PathVariable int id, HttpServletRequest request) {
+
     if(!userService.isLoggedUserAdmin(request))throw new UserIsNotAdminException();
     committeeUserService.deleteAllCommitteeUsers(id); 
     demodayService.deleteDemodayById(id); 
@@ -111,6 +117,45 @@ public class DemodayController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    @PostMapping("/setfinalists")
+    public ResponseEntity<?> createFinalists(@RequestBody List<Finalist> finalists, HttpServletRequest request) {
+        if (this.userService.isLoggedUserAdmin(request) || this.userService.isLoggedUserProfessor(request)) {
+            for(Finalist finalist: finalists){
+                try {
+                    Finalist savedFinalist = this.finalistService.save(finalist);
+                    System.out.println(savedFinalist.getId());
+                } catch (Exception e){
+                    if (e.getMessage().contains("Duplicate entry")) {
+                        System.out.println("Finalista já cadastrado.");
+                    } else {
+                        e.printStackTrace();
+                        return new ResponseEntity<>("Erro Interno.", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                }
+            }
+            return new ResponseEntity<>("Finalistas registrados.", HttpStatus.OK);
+        }
+        throw new UserIsNotAdminException("Usuário Admin ou Professor requerido");
+    }
+
+    @PostMapping("/deletefinalists")
+    public ResponseEntity<?> deleteFinalistsByProjectIds(@RequestBody List<Integer> projectIds, HttpServletRequest request) {
+        if (this.userService.isLoggedUserAdmin(request) || this.userService.isLoggedUserProfessor(request)) {
+            for(Integer projectId: projectIds){
+                try {
+                    System.out.println("aqui 1?");
+                    this.finalistService.deleteByProjectId(projectId);
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return new ResponseEntity<>("Erro Interno.", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+            return new ResponseEntity<>("Projeto(s) removido(s) da lista de Finalistas.", HttpStatus.OK);
+        }
+        throw new UserIsNotAdminException("Usuário Admin ou Professor requerido");
     }
 
 
