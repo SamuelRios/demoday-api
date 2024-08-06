@@ -10,6 +10,7 @@ import com.demodayapi.exceptions.ProjectIsNotFinalistException;
 import com.demodayapi.exceptions.TherIsNotActiveDemodayException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfEvaluationException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
+import com.demodayapi.exceptions.ThereIsNotProjectsInCurrentDemoday;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 import com.demodayapi.exceptions.UserDoesntHaveProjectException;
 import com.demodayapi.exceptions.UserHasAlreadyRatedProjectException;
@@ -293,10 +294,20 @@ public class ProjectControler {
     public ResponseEntity<List<Project>> getPendingProjects(HttpServletRequest request)
             throws IOException, MethodArgumentNotValidException {
         User user = userService.getLoggedUser(request);
+        List <Demoday> demoday = demodayService.getDemodayInProgress();
+        if (demoday==null){
+            throw new TherIsNotActiveDemodayException();
+        }
+        int idDemoday= demoday.get(0).getId();
+       
+
         UserTypeEnum userType = user.getType();
         if (userType == UserTypeEnum.STUDENT)
             throw new UserIsNotAdminException();
-        List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED);
+        List<Project> projects = projectService.listOfPenddingProjects(ProjectStatusEnum.SUBMITTED,idDemoday);
+        if (projects.isEmpty()){
+            throw new ThereIsNotProjectsInCurrentDemoday();
+        }
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 

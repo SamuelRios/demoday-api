@@ -30,6 +30,7 @@ import com.demodayapi.exceptions.UserPedingException;
 import com.demodayapi.exceptions.UserRejectedException;
 import com.demodayapi.exceptions.ValidateBiggestBetweenInitEndException;
 import com.demodayapi.exceptions.ThereIsNotPeriodOfSubmissionException;
+import com.demodayapi.exceptions.ThereIsNotProjectsInCurrentDemoday;
 import com.demodayapi.exceptions.UserAlredyHasProjectCreatedException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -244,5 +245,12 @@ public class RestExceptionHandler {
         StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
-
+    
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ThereIsNotProjectsInCurrentDemoday.class)
+    public ResponseEntity<StandardError> thereIsNotProjectsInCurrentDemoday(
+        ThereIsNotProjectsInCurrentDemoday exception, HttpServletRequest request) {
+        StandardError err = getStandardError(exception, request, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
 }

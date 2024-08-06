@@ -39,8 +39,8 @@ public interface ProjectRepository extends CrudRepository<Project, Integer>{
 
     List<Project> findByDemodayIdAndStatus(int demodayId, ProjectStatusEnum status);
 
-    @Query("SELECT p FROM Project p WHERE p.demoday.id = (SELECT MAX(d.id) FROM Demoday d WHERE p.status = :status)")
-    List<Project> listProjectsStatusIsSubmitted(@Param("status") ProjectStatusEnum status);
+    @Query("SELECT p  FROM Project p WHERE p.status = :status AND p.demoday.id = :demoday")
+    List<Project> listProjectsStatusIsSubmitted(@Param("status") ProjectStatusEnum status,  @Param("demoday") int demoday);
     
 
 }
