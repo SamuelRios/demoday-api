@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -38,7 +39,7 @@ public class Project {
     @NotBlank(message = "O link do vídeo é obrigatório.")
     private String linkvideo;
 
-    @Column(nullable=false, length = 255)
+    @Column(nullable=true, length = 255)
     @Size(min = 3, max = 255, message = "a disciplina deve conter no mínimo 3 caracteres.")
     @NotBlank(message = "O link do vídeo é obrigatório.")
     private String discipline;
@@ -48,7 +49,7 @@ public class Project {
     @NotBlank(message = "O nome do professor é obrigatório.")
     private String professor;
 
-    @Column(nullable=false, length = 4, columnDefinition = "YEAR")
+    @Column(nullable=true, length = 4, columnDefinition = "YEAR")
     private Year year;
 
     @Column(nullable=false, length = 500)
@@ -56,9 +57,6 @@ public class Project {
     @NotBlank(message = "A descrição é obrigatória.")
     private String description;
     
-    @Column(nullable=false)
-    @NotBlank(message = "A Categoriaé obrigatória.")
-    private String category;
 
     @Column(length = 255)
     @Size(min = 0, max = 255, message = "O campo tecnologies deve conter no mínimo 4 caracteres")
@@ -81,14 +79,12 @@ public class Project {
     @Column(name = "emails", nullable = true)
     private List<String> emails;
     
-   
-
-    @Column(length = 500)
-    private String image;
-       
     @ManyToOne
     @JoinColumn(name = "demoday_id")
     private Demoday demoday;
+
+    @Column(length = 500)
+    private String rejectionReason;
 
     
     @ManyToOne
@@ -97,6 +93,19 @@ public class Project {
     private User user;
 
 
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
+
+    // Outros campos e métodos
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
     // Getters and Setters
     public int getId() {
         return id;
@@ -162,13 +171,7 @@ public class Project {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public String getTecnologies() {
         return tecnologies;
@@ -211,22 +214,17 @@ public class Project {
         this.status = ProjectStatusEnum.valueOf(status);
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
 
     public ProjectTypeEnum getType() {
         return type;
     }
 
-    public void setProjectType(String type) {
-        this.type = ProjectTypeEnum.valueOf(type);
+    public void setType(String type) {
+        if(type != null)
+            this.type = ProjectTypeEnum.valueOf(type);
     }
+
+   
 
     public void setPeriod(Integer period) {
         this.period = period;
@@ -236,16 +234,21 @@ public class Project {
         this.status = status;
     }
 
-    public void setType(ProjectTypeEnum type) {
-        this.type = type;
-    }
-
+ 
     public List<String> getEmails() {
         return emails;
     }
 
     public void setEmails(List<String> emails) {
         this.emails = emails;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }
 

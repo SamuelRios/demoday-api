@@ -1,5 +1,4 @@
-package com.demodayapi.controller;
-
+package com.demodayapi.controllers;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

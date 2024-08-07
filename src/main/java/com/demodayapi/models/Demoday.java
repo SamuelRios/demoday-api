@@ -1,7 +1,9 @@
 package com.demodayapi.models;
 import java.time.LocalDate;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,18 +65,18 @@ public class Demoday {
 	@Column(columnDefinition = "DATE")
 	private LocalDate phaseFourInit;
 
-	@FutureOrPresent
-	@Column(columnDefinition = "DATE")
-	private LocalDate phaseFourEnd;
+    @FutureOrPresent
+    @Column(columnDefinition = "DATE")
+    private LocalDate phaseFourEnd ;
 
-	@OneToMany(mappedBy = "demoday", cascade = CascadeType.ALL)
-	private List<AccCriteriaDemoday> accCriteriaDemoday;
-
-	@OneToMany(mappedBy = "demoday", cascade = CascadeType.ALL)
-	private List<EvalCriteriaDemoday> evalCriteriaDemoday;
-
-	@OneToMany(mappedBy = "demoday", cascade = CascadeType.ALL)
-	private List<Project> project;
+	@OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
+    private List<AccCriteriaDemoday> accCriteriaDemoday ;
+	
+    @OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
+    private List<EvalCriteriaDemoday> evalCriteriaDemoday ;
+    
+	@OneToMany(mappedBy ="demoday",cascade=CascadeType.ALL)
+    private List<Project> project ;
 
 	@JsonIgnore
 	@OneToOne(mappedBy = "demoday", cascade = CascadeType.ALL)
@@ -86,6 +88,7 @@ public class Demoday {
 		this.evalCriteriaDemoday.forEach(i -> i.setDemoday(this));
 
 	}
+ 
 
 	public int getId() {
 		return id;
@@ -193,6 +196,7 @@ public class Demoday {
 		return evalCriteriaDemoday;
 	}
 
+
 	public Committee getCommittee() {
 		return committee;
 	}
@@ -201,4 +205,7 @@ public class Demoday {
 		this.committee = committee;
 	}
 
+
+
 }
+ 
