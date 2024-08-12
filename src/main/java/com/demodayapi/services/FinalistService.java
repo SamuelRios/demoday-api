@@ -32,5 +32,7 @@ public class FinalistService {
         return false;
     }
 
-    // Adicione outros métodos de serviço conforme necessário
+    public List<Finalist> getFinalistsByDemodayId(int demodayId){
+        return this.finalistRepository.findByDemodayId(demodayId);
+    }
 }

@@ -13,4 +13,5 @@ public interface FinalistRepository extends CrudRepository<Finalist, Integer>{
     List<Finalist> findAll();
     void deleteByProjectId(Integer projectId);
     Finalist findByProjectId(Integer projectId);
+    List<Finalist> findByDemodayId(int demodayId);
 }
