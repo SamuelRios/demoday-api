@@ -119,6 +119,12 @@ public class DemodayController {
         }
     }
 
+    @GetMapping("/getfinalists/{demoday_id}")
+    public ResponseEntity<?> getFinalists(@PathVariable int demoday_id, HttpServletRequest request) {
+        List<Finalist> finalists =  this.finalistService.getFinalistsByDemodayId(demoday_id);
+        return new ResponseEntity<>(finalists, HttpStatus.OK);
+    }
+
 
     @PostMapping("/setfinalists")
     public ResponseEntity<?> createFinalists(@RequestBody List<Finalist> finalists, HttpServletRequest request) {
